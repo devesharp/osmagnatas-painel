@@ -1,0 +1,57 @@
+"use client";
+
+import { useViewForm, zodWrapper } from "@devesharp/react-hooks-v2";
+import { toast } from "sonner";
+import { z } from "zod";
+
+// TODO: Importar a API e tipos específicos da configuração
+// import { {{camelCase name}}Api, {{pascalCase name}}Data } from "@/api/{{kebabCase name}}.request";
+
+// Tipo temporário - substituir pela interface real da API
+interface {{pascalCase name}}Data {
+  id?: number;
+  name?: string;
+  description?: string;
+  code?: string;
+  email?: string;
+  phone?: string;
+  active?: boolean;
+  notifications?: boolean;
+  notes?: string;
+  // TODO: Adicionar campos específicos da configuração
+}
+
+// API temporária - substituir pela implementação real
+const {{camelCase name}}Api = {
+  get: async (): Promise<{{pascalCase name}}Data> => {
+    // TODO: Implementar chamada à API para buscar configurações
+    return {};
+  },
+  update: async (data: Partial<{{pascalCase name}}Data>): Promise<{{pascalCase name}}Data> => {
+    // TODO: Implementar chamada à API para salvar configurações
+    console.log("Salvando configurações:", data);
+    return data as {{pascalCase name}}Data;
+  },
+};
+
+export function {{pascalCase name}}Ctrl() {
+  const viewForm = useViewForm<{{pascalCase name}}Data>({
+    resolveGet: {{camelCase name}}Api.get,
+    resolveAction: (data) =>
+      {{camelCase name}}Api.update(data as Partial<{{pascalCase name}}Data>),
+    validateData: zodWrapper(z.object({
+      NAME: z.string()
+    })),
+    onSuccess: () => {
+      toast.success("Configurações salvas com sucesso");
+    },
+    onFailed: (error) => {
+      console.log(error);
+      toast.error("Erro ao salvar configurações");
+    },
+  });
+
+  return {
+    viewForm,
+  };
+} 

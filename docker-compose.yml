@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  dash:
+    image: coruja/dash:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+        - SENTRY_ORG=${SENTRY_ORG}
+        - SENTRY_PROJECT=${SENTRY_PROJECT}
+        - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN}
+        - BUILD_TIME=$(date +%s)
+    ports:
+      - 3000:3000
+    environment:
+      - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+      - SENTRY_ORG=${SENTRY_ORG}
+      - SENTRY_PROJECT=${SENTRY_PROJECT}
+      - NEXT_PUBLIC_SENTRY_DSN=${NEXT_PUBLIC_SENTRY_DSN}

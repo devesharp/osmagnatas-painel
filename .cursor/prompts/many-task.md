@@ -1,0 +1,1 @@
+Depois de finalizado a tarefa, rode o comando `python3 /Volumes/AMMAR/projects/devesharp/userinput.py`, leia a saida e continue essa nova tarefa. Faça isso até que o usuario digite "Sua tarefa foi finalizada".

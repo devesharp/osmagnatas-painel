@@ -1,0 +1,79 @@
+"use client";
+
+import { FormProvider } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { use{{pascalCase name}}FiltersCtrl } from "./{{kebabCase name}}-filters.ctrl";
+import { {{pascalCase name}}FiltersProps } from "./{{kebabCase name}}-filters.types";
+import { FiltersContainer } from "@/components/filters-container/filters-container";
+
+/**
+ * Componente principal de filtros para {{titleCase name}}
+ */
+export function {{pascalCase name}}Filters(props: {{pascalCase name}}FiltersProps) {
+  const ctrl = use{{pascalCase name}}FiltersCtrl(props);
+
+  return (
+    <FiltersContainer
+      visible={props.isVisibleMobile}
+      onRequestClose={props.onRequestClose}
+      onSubmit={() => {
+        props.onRequestClose?.();
+        props.onFiltersApply(ctrl.methods.getValues());
+      }}
+      title="Filtros de {{titleCase name}}"
+      submitButtonText="Aplicar Filtros"
+      className="mb-6"
+    >
+      <div className="bg-background-transparent md:bg-background-muted rounded-lg md:mb-6 md:p-6">
+        <FormProvider {...ctrl.methods}>
+          <form
+            onSubmit={ctrl.handleSubmit(ctrl.onSubmit)}
+            className="md:grid xl:grid-cols-4 lg:grid-cols-3 gap-4 space-y-4 md:space-y-0 md:grid-cols-2 grid-cols-1"
+          >
+            {/* Campo de busca básico */}
+            <Input
+              name="search"
+              title="Buscar"
+              placeholder="Digite para buscar..."
+            />
+
+            {/* Campo de seleção exemplo */}
+            <Select
+              name="status"
+              title="Status"
+              options={[
+                { value: "none", label: "Todos" },
+                { value: "active", label: "Ativo" },
+                { value: "inactive", label: "Inativo" },
+              ]}
+            />
+
+            {/* TODO: Adicionar mais campos de filtro conforme necessário */}
+
+            {/* Botões de ação */}
+            <div className="gap-2 pt-0 col-span-full hidden md:flex">
+              <Button
+                type="submit"
+                disabled={ctrl.isSubmitting}
+                className="flex-1"
+                size="lg"
+              >
+                {ctrl.isSubmitting ? "Aplicando..." : "Buscar"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={ctrl.resetForm}
+                size="lg"
+              >
+                Limpar
+              </Button>
+            </div>
+          </form>
+        </FormProvider>
+      </div>
+    </FiltersContainer>
+  );
+} 

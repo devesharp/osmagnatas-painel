@@ -1,0 +1,57 @@
+import React from "react";
+import { cn } from "@/lib/utils";
+{{#if (ne type 'ui')}}
+import { {{pascalCase name}}Props } from "./{{kebabCase name}}.types";
+{{/if}}
+{{!-- {{#if withController}} --}}
+import { use{{pascalCase name}}Ctrl } from "./{{kebabCase name}}.ctrl";
+{{!-- {{/if}} --}}
+
+/**
+ * Componente {{pascalCase name}}
+ * 
+ * Exemplo de uso:
+ * ```tsx
+ * <{{pascalCase name}}
+ *   // props aqui
+ * />
+ * ```
+ */
+{{#if (eq type 'ui')}}
+export interface {{pascalCase name}}Props extends React.HTMLAttributes<HTMLDivElement> {
+  // Adicione suas props aqui
+}
+
+export function {{pascalCase name}}({ className, ...props }: {{pascalCase name}}Props) {
+  return (
+    <div
+      className={cn(
+        // Adicione suas classes padrão aqui
+        className
+      )}
+      {...props}
+    >
+      {/* Conteúdo do componente */}
+    </div>
+  );
+}
+{{else}}
+export function {{pascalCase name}}(props: {{pascalCase name}}Props) {
+  const { className } = props;
+  
+  {{!-- {{#if withController}} --}}
+  const ctrl = use{{pascalCase name}}Ctrl(props);
+  {{!-- {{/if}} --}}
+
+  return (
+    <div
+      className={cn(
+        // Adicione suas classes padrão aqui
+        className
+      )}
+    >
+      {/* Conteúdo do componente */}
+    </div>
+  );
+}
+{{/if}} 

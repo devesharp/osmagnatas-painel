@@ -1,0 +1,29 @@
+import { useState, useEffect, useCallback } from "react";
+import { {{pascalCase name}}Props } from "./{{kebabCase name}}.types";
+
+export function use{{pascalCase name}}Ctrl(props: {{pascalCase name}}Props) {
+  const {
+    // Desestruture as props aqui
+  } = props;
+
+  // Estados do componente
+  const [state, setState] = useState();
+
+  // Efeitos
+  useEffect(() => {
+    // Lógica de efeito aqui
+  }, []);
+
+  // Callbacks
+  const handleAction = useCallback(() => {
+    // Lógica do callback aqui
+  }, []);
+
+  return {
+    // Estado
+    state,
+    
+    // Ações
+    handleAction,
+  };
+} 

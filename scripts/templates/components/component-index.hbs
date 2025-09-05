@@ -1,0 +1,7 @@
+export { {{pascalCase name}} } from "./{{kebabCase name}}";
+{{#if withController}}
+export { use{{pascalCase name}}Ctrl } from "./{{kebabCase name}}.ctrl";
+{{/if}}
+{{#if (ne type 'ui')}}
+export type { {{pascalCase name}}Props } from "./{{kebabCase name}}.types";
+{{/if}} 

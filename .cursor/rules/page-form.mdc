@@ -1,0 +1,28 @@
+## Página - Lista
+
+Para fazer uma página de form (Páginas que tem ID para resgastar e salvar, exemplo: Condomínios, Imóveis), você deve seguir os seguintes passos:
+
+yarn plop page-config --name "my-profile"
+
+1. Use comando `yarn plop page-form --name "{component-name}"` para criar a página na pasta `src/_pages`
+2. Crie os campos do formulário
+  - Separe por sessão caso seja necessário
+  - Para entender como usar os inputs da melhor forma, veja o arquivo `/Volumes/AMMAR/projects/devesharp/boilerplate2/.cursor/prompts/forms.md`
+  - Use o componente `ViewFormProvider` para gerenciar o formulário, veja o arquivo `src/_pages/real-estate-config-page/real-estate-config-page.tsx`
+  - Nos campos do formulário use sempre a propriedade `name` para identificar o campo
+3. Edite o arquivo `{component-name}.ctrl.tsx` para implementar a lógica da página caso necessário
+  - A página usa useViewForm para a gestão dos dados, em caso de duvida veja `https://raw.githubusercontent.com/devesharp/react-hooks-v2/refs/heads/main/docs/useViewForm-documentation.md`
+4. Configure os tipos corretamente para em `{component-name}.types.tsx`
+5. Estilização, use o tailwindcss para estilizar a página caso necessário
+6. Integração com api, busque em `src/api` se existe um arquivo com o recurso utilizado, caso não exista crie e utilize o arquivo `src/api/properties.request.ts` como base.
+7. Caso precise adicione a rota (nextjs) em `src/app/(app)/{component-name}/[id]/edit/page.tsx` para edição e `src/app/(app)/{component-name}/create/page.tsx` para explicitamente o seguindo o template, não deve ter nenhuma lógica aqui:
+```
+"use client";
+
+import { ComponentName } from "@/_pages/{component-name}/{component-name}";
+
+export default ComponentName;
+```
+8. Verifica que existe uma página de listing desse recurso e atualize com `import { useRouter } from "next/navigation";` com as url corretas para criar e editar
+
+Baseado nessas informações entenda o seguinte problema e realize as tarefas:

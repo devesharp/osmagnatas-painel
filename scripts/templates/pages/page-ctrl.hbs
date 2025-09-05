@@ -1,0 +1,123 @@
+"use client";
+
+import { useRef, useState } from "react";
+{{#if withColumns}}
+import { ColumnConfig } from "@/components/table-listing/table-listing.types";
+{{/if}}
+{{#if withFilters}}
+import { I{{pascalCase name}}Filters } from "./components/{{kebabCase name}}-filters/{{kebabCase name}}-filters.types";
+{{/if}}
+{{#if withColumns}}
+import { use{{pascalCase name}}Columns } from "./{{kebabCase name}}.cols";
+{{/if}}
+import {
+  IResolve,
+  IResponseResults,
+  useViewList,
+} from "@devesharp/react-hooks-v2";
+
+// TODO: Definir o tipo do item da listagem
+interface {{pascalCase name}}Item {
+  id: number;
+  // Adicionar propriedades conforme necessário
+}
+
+// TODO: Implementar a API de busca
+const {{camelCase name}}Api = {
+  search: async (filters: any) => {
+    // Implementar chamada à API
+    return {
+      count: 0,
+      results: [],
+    };
+  },
+};
+
+export function {{pascalCase name}}Ctrl() {
+  {{#if withFilters}}
+  const [openFilterModal, setOpenFilterModal] = useState(false);
+  {{/if}}
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  
+  {{#if withFilters}}
+  const viewList = useViewList<{{pascalCase name}}Item, I{{pascalCase name}}Filters>({
+  {{else}}
+  const viewList = useViewList<{{pascalCase name}}Item, any>({
+  {{/if}}
+    resolveResources: {{camelCase name}}Api.search as IResolve<
+      IResponseResults<{{pascalCase name}}Item>
+    >,
+    onAfterSearch: () => {
+      setTimeout(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
+    },
+  });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  {{#if withColumns}}
+  // Handlers para as ações
+  const handleEdit = (item: {{pascalCase name}}Item) => {
+    console.log("Editar item:", item.id);
+    // TODO: Implementar navegação para edição
+  };
+
+  const handleView = (item: {{pascalCase name}}Item) => {
+    console.log("Visualizar item:", item.id);
+    // TODO: Implementar visualização
+  };
+
+  const handleDelete = (item: {{pascalCase name}}Item) => {
+    console.log("Excluir item:", item.id);
+    // TODO: Implementar exclusão
+  };
+
+  // Configuração das colunas
+  const columns: ColumnConfig<{{pascalCase name}}Item>[] = use{{pascalCase name}}Columns({
+    onEdit: handleEdit,
+    onView: handleView,
+    onDelete: handleDelete,
+  });
+
+  // Ações em lote
+  const actions = [
+    {
+      icon: <span>📝</span>,
+      title: "Editar Selecionados",
+      onClick: () => {
+        console.log(`Editando ${selectedItems.length} itens`);
+      },
+    },
+    {
+      icon: <span>🗑️</span>,
+      title: "Excluir Selecionados",
+      onClick: () => {
+        console.log(`Excluindo ${selectedItems.length} itens`);
+      },
+    },
+  ];
+  {{/if}}
+
+  return {
+    containerRef,
+    viewList,
+    {{#if withColumns}}
+    columns,
+    {{/if}}
+    {{#if withFilters}}
+    openFilterModal,
+    setOpenFilterModal,
+    {{/if}}
+    selectedItems,
+    setSelectedItems,
+    {{#if withColumns}}
+    actions,
+    {{/if}}
+  };
+} 

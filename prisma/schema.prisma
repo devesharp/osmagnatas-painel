@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo User simplificado
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  user_name String?
+  password  String?
+  ativo     Boolean  @default(true)
+  telefone  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relação de exemplo
+  posts       Post[]
+  customers   Customer[]
+  transactions Transaction[]
+  logs        Log[]
+
+  @@map("users")
+}
+
+// Exemplo de modelo Post
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  Int
+
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("posts")
+}
+
+// Modelo Customer
+enum PersonType {
+  PF // Pessoa Física
+  PJ // Pessoa Jurídica
+}
+
+model Customer {
+  id               Int        @id @default(autoincrement())
+  name             String
+  person_type      PersonType
+  email            String?
+  phone            String?
+  wallet_address   String?
+  cpf              String?    // CPF para pessoa física
+  cnpj             String?    // CNPJ para pessoa jurídica
+  access_website   String?
+  access_email     String?
+  access_password  String?    // Sempre encriptado
+  created_by       Int
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  creator      User         @relation(fields: [created_by], references: [id])
+  transactions Transaction[]
+
+  @@map("customers")
+}
+
+// Modelo Transaction
+enum TransactionStatus {
+  PENDING
+  CANCELED
+  PAYED
+}
+
+enum PaymentType {
+  IN  // Entrada
+  OUT // Saída
+}
+
+enum LogType {
+  LOGIN
+  LOGOUT
+  CREATE_TRANSACTION
+  UPDATE_TRANSACTION
+  DELETE_TRANSACTION
+  CREATE_CUSTOMER
+  UPDATE_CUSTOMER
+  DELETE_CUSTOMER
+  VIEW_TRANSACTION
+  VIEW_CUSTOMER
+}
+
+model Transaction {
+  id           Int               @id @default(autoincrement())
+  customer_id  Int
+  status       TransactionStatus @default(PENDING)
+  payment_type PaymentType       @default(OUT)
+  notes        String?
+  amount       Float
+  moeda        String             @default("USD")
+  expired_at   DateTime?
+  payed_at     DateTime?
+  created_by   Int
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  customer     Customer           @relation(fields: [customer_id], references: [id])
+  creator      User               @relation(fields: [created_by], references: [id])
+
+  @@map("transactions")
+}
+
+// Modelo Log
+model Log {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  log_type    LogType
+  description String
+  date        DateTime @default(now())
+
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("logs")
+}

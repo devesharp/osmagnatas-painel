@@ -1,0 +1,104 @@
+"use client";
+
+import { useMemo } from "react";
+import { ColumnConfig } from "@/components/table-listing/table-listing.types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SlOptionsVertical } from "react-icons/sl";
+
+// TODO: Importar o tipo correto do item
+interface {{pascalCase name}}Item {
+  id: number;
+  // Adicionar propriedades conforme necessário
+}
+
+// Componente para coluna de ações
+interface ActionsColProps {
+  item: {{pascalCase name}}Item;
+  onEdit?: (item: {{pascalCase name}}Item) => void;
+  onView?: (item: {{pascalCase name}}Item) => void;
+  onDelete?: (item: {{pascalCase name}}Item) => void;
+}
+
+function ActionsCol({ item, onEdit, onView, onDelete }: ActionsColProps) {
+  return (
+    <div className="flex items-center gap-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            className="text-gray-400 hover:text-white p-1 rounded-full transition-colors bg-muted w-6 h-6 flex items-center justify-center hover:bg-gray-600"
+            title="Opções"
+          >
+            <SlOptionsVertical className="h-3 w-3 text-muted-foreground" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem
+            onClick={() => onEdit?.(item)}
+            className="cursor-pointer"
+          >
+            Editar
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onView?.(item)}
+            className="cursor-pointer"
+          >
+            Visualizar
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onDelete?.(item)}
+            className="cursor-pointer"
+          >
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}
+
+// Props do hook principal
+interface Use{{pascalCase name}}ColumnsProps {
+  onEdit?: (item: {{pascalCase name}}Item) => void;
+  onView?: (item: {{pascalCase name}}Item) => void;
+  onDelete?: (item: {{pascalCase name}}Item) => void;
+}
+
+export function use{{pascalCase name}}Columns({
+  onEdit,
+  onView,
+  onDelete,
+}: Use{{pascalCase name}}ColumnsProps = {}) {
+  const columns: ColumnConfig<{{pascalCase name}}Item>[] = useMemo(
+    () => [
+      {
+        key: "id",
+        title: "ID",
+        width: "80px",
+        sortable: true,
+        render: (item) => <span className="font-semibold">{item.id}</span>,
+      },
+      // TODO: Adicionar mais colunas conforme necessário
+      {
+        key: "actions",
+        title: "",
+        width: "60px",
+        render: (item) => (
+          <ActionsCol
+            item={item}
+            onEdit={onEdit}
+            onView={onView}
+            onDelete={onDelete}
+          />
+        ),
+      },
+    ],
+    [onEdit, onView, onDelete]
+  );
+
+  return columns;
+} 

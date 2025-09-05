@@ -1,0 +1,54 @@
+name: Deploy to Server via SSH
+
+on:
+  push:
+    # branches:
+    #   - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            echo "📁 Navegando para /home/ubuntu/builds/dash..."
+            cd /home/ubuntu/builds/dash
+            git pull
+            
+            echo "🚀 Executando script de build..."
+            ./.scripts/build.sh
+
+      - name: Notify Slack on Success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: https://hooks.slack.com/services/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
+          SLACK_COLOR: good
+          SLACK_TITLE: "✅ Deploy realizado com sucesso!"
+          SLACK_MESSAGE: |
+            Repositório: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Autor: ${{ github.actor }}
+            🚀 API deployada com sucesso no servidor!
+
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: https://hooks.slack.com/services/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
+          SLACK_COLOR: danger
+          SLACK_TITLE: "❌ Falha no deploy!"
+          SLACK_MESSAGE: |
+            Repositório: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Autor: ${{ github.actor }}
+            👉 Ver logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

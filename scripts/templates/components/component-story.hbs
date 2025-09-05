@@ -1,0 +1,55 @@
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+{{#if (eq type 'ui')}}
+import { {{pascalCase name}} } from "./{{kebabCase name}}";
+{{else}}
+import { {{pascalCase name}} } from "./{{kebabCase name}}";
+import { {{pascalCase name}}Props } from "./{{kebabCase name}}.types";
+{{/if}}
+
+const meta: Meta<typeof {{pascalCase name}}> = {
+  title: "{{#if (eq type 'ui')}}Components/UI{{else if (eq type 'page')}}Pages{{else}}Components{{/if}}/{{pascalCase name}}",
+  component: {{pascalCase name}},
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: `
+Componente {{pascalCase name}}
+
+Descrição do componente aqui.
+        `,
+      },
+    },
+  },
+  argTypes: {
+    className: {
+      description: "Classe CSS personalizada",
+      control: { type: "text" },
+    },
+    // Adicione outros argTypes aqui
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof {{pascalCase name}}>;
+
+// Story padrão
+export const Default: Story = {
+  args: {
+    // Props padrão aqui
+  },
+};
+
+// Story com variação
+export const Variant: Story = {
+  args: {
+    // Props da variação aqui
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Descrição da variação aqui.",
+      },
+    },
+  },
+}; 

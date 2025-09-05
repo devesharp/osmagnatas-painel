@@ -1,0 +1,18 @@
+.text-label {
+  padding-bottom: 0.25rem;
+}
+
+.text-error {
+  padding-top: 0.1rem;
+}
+
+
+.fade-in {
+  animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}

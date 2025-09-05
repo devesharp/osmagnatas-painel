@@ -1,0 +1,21 @@
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { {{pascalCase name}} } from "./{{kebabCase name}}";
+
+describe("{{pascalCase name}}", () => {
+  it("deve renderizar corretamente", () => {
+    render(<{{pascalCase name}} />);
+    
+    // Adicione suas asserções aqui
+    expect(screen.getByRole("")).toBeInTheDocument();
+  });
+
+  it("deve aplicar className personalizada", () => {
+    const customClass = "custom-class";
+    render(<{{pascalCase name}} className={customClass} />);
+    
+    // Adicione suas asserções aqui
+  });
+
+  // Adicione mais testes aqui
+}); 

@@ -1,0 +1,103 @@
+"use client";
+
+import { useViewForm, zodWrapper } from "@devesharp/react-hooks-v2";
+import { toast } from "sonner";
+import { z } from "zod";
+import { useState } from "react";
+import { ExistingImage } from "@/components/upload-images-input/upload-images-input.types";
+import { useParams } from "next/navigation";
+import { I{{pascalCase name}}Form } from "./{{kebabCase name}}.types";
+import { convertToFormData } from "@/lib/api-utils";
+
+// TODO: Importar a API e tipos específicos
+// import { {{camelCase name}}Api } from "@/api/{{kebabCase name}}.request";
+// import { {{pascalCase name}}Item } from "../{{kebabCase name}}-listing-page/{{kebabCase name}}-listing-page.types";
+
+// Tipo temporário - substituir pela interface real da API
+interface {{pascalCase name}}Item {
+  id?: number;
+  NOME?: string;
+  DESCRICAO?: string;
+  VIDEO?: string;
+  fotos?: Array<{
+    FOTO: string;
+    URL: string;
+  }>;
+  // TODO: Adicionar campos específicos do item
+}
+
+// API temporária - substituir pela implementação real
+const {{camelCase name}}Api = {
+  getById: async (id: number): Promise<{{pascalCase name}}Item> => {
+    // TODO: Implementar chamada à API para buscar item por ID
+    console.log("Buscando item:", id);
+    return {};
+  },
+  create: async (data: Partial<{{pascalCase name}}Item>): Promise<{{pascalCase name}}Item> => {
+    // TODO: Implementar chamada à API para criar item
+    console.log("Criando item:", data);
+    return data as {{pascalCase name}}Item;
+  },
+  update: async (id: number, data: Partial<{{pascalCase name}}Item>): Promise<{{pascalCase name}}Item> => {
+    // TODO: Implementar chamada à API para atualizar item
+    console.log("Atualizando item:", id, data);
+    return data as {{pascalCase name}}Item;
+  },
+};
+
+export function {{pascalCase name}}Ctrl() {
+  const { id } = useParams();
+  const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<ExistingImage[]>([]);
+
+  const viewForm = useViewForm<I{{pascalCase name}}Form>({
+    id: id as string,
+    resolveGet: (id) => {{camelCase name}}Api.getById(Number(id)),
+    resolveCreate: (data) =>
+      {{camelCase name}}Api.create(data as Partial<{{pascalCase name}}Item>),
+    resolveUpdate: (id, data) =>
+      {{camelCase name}}Api.update(
+        Number(id),
+        data as Partial<{{pascalCase name}}Item>
+      ),
+    validateData: zodWrapper(
+      z.object({
+        NOME: z.string().min(1, "Nome é obrigatório"),
+        DESCRICAO: z.string().optional(),
+        VIDEO: z.string().optional(),
+      })
+    ),
+    handleFormData: (data) => {
+      return {
+        ...data,
+        fotos: existingImages.map((image) => image.name),
+        files: images,
+      };
+    },
+    onStarted(v) {
+      if (v.get && v.get.fotos) {
+        setExistingImages(
+          v.get.fotos.map((i) => ({
+            name: i.FOTO,
+            url: i.URL,
+          }))
+        );
+      }
+    },
+    onSuccess: () => {
+      toast.success("Item salvo com sucesso");
+    },
+    onFailed: (error) => {
+      console.log(error);
+      toast.error("Erro ao salvar item");
+    },
+  });
+
+  return {
+    viewForm,
+    images,
+    setImages,
+    existingImages,
+    setExistingImages,
+  };
+} 
