@@ -170,7 +170,7 @@ export async function GET(
     const resumeData: CustomerResumeData = {
       id: customer.id,
       name: customer.name,
-      email: customer.email,
+      email: customer.email || '',
       phone: customer.phone,
       person_type: customer.person_type,
       cpf: customer.cpf,
@@ -178,8 +178,8 @@ export async function GET(
       wallet_address: customer.wallet_address,
       access_website: customer.access_website,
       access_email: customer.access_email,
-      created_at: customer.created_at.toISOString(),
-      updated_at: customer.updated_at.toISOString(),
+      created_at: customer.createdAt.toISOString(),
+      updated_at: customer.updatedAt.toISOString(),
       creator: customer.creator
     }
 

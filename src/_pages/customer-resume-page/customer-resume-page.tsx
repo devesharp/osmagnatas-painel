@@ -242,11 +242,11 @@ export function CustomerResumePage() {
           <CardContent className="space-y-2">
             <div>
               <p className="text-xs text-muted-foreground">Criado em</p>
-              <p className="font-medium">{formatDate(customer.created_at)}</p>
+              <p className="font-medium">{formatDate(customer.createdAt)}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Última atualização</p>
-              <p className="font-medium">{formatDate(customer.updated_at)}</p>
+              <p className="font-medium">{formatDate(customer.updatedAt)}</p>
             </div>
             {customer.creator && (
               <div>

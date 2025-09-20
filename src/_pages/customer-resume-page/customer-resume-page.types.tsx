@@ -4,24 +4,26 @@ export interface CustomerResumePageProps {
   // Definir props se necessário
 }
 
-// Interface para os dados do resumo do cliente
+// Interface para os dados do resumo do cliente (compatível com Customer)
 export interface ICustomerResumeData {
   id: number;
   name: string;
   email: string;
-  phone?: string;
+  phone?: string | null;
   person_type: 'PF' | 'PJ';
-  cpf?: string;
-  cnpj?: string;
-  wallet_address?: string;
-  access_website?: string;
-  access_email?: string;
-  created_at: string;
-  updated_at: string;
+  cpf?: string | null;
+  cnpj?: string | null;
+  wallet_address?: string | null;
+  access_website?: string | null;
+  access_email?: string | null;
+  access_password?: string | null;
+  created_by: number;
+  createdAt: Date;
+  updatedAt: Date;
   creator?: {
     id: number;
     email: string;
-    user_name: string;
+    user_name?: string | null;
   };
 }
 

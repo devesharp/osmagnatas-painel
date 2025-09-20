@@ -76,4 +76,13 @@ export const customersApi = {
   delete: async (id: number): Promise<void> => {
     await api.delete(`/customers/${id}`);
   },
+
+  // Buscar resumo do customer por ID
+  getResume: async (id: number): Promise<Customer> => {
+    const response = await api.get<APIResponse<Customer>>(
+      `/customers/${id}/resume`
+    );
+
+    return response.data.data;
+  },
 };

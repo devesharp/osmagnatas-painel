@@ -3,39 +3,31 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { customersApi } from "@/api/customers.request";
 
-// Interface para os dados do resumo do cliente
+// Interface para os dados do resumo do cliente (compatível com Customer)
 interface CustomerResumeData {
   id: number;
   name: string;
   email: string;
-  phone?: string;
+  phone?: string | null;
   person_type: 'PF' | 'PJ';
-  cpf?: string;
-  cnpj?: string;
-  wallet_address?: string;
-  access_website?: string;
-  access_email?: string;
-  created_at: string;
-  updated_at: string;
+  cpf?: string | null;
+  cnpj?: string | null;
+  wallet_address?: string | null;
+  access_website?: string | null;
+  access_email?: string | null;
+  access_password?: string | null;
+  created_by: number;
+  createdAt: Date;
+  updatedAt: Date;
   creator?: {
     id: number;
     email: string;
-    user_name: string;
+    user_name?: string | null;
   };
 }
 
-// API para buscar dados do resumo do cliente
-const customerResumeApi = {
-  get: async (id: number): Promise<CustomerResumeData> => {
-    const response = await fetch(`/api/customers/${id}/resume`);
-    if (!response.ok) {
-      throw new Error('Erro ao buscar dados do cliente');
-    }
-    const result = await response.json();
-    return result.data;
-  },
-};
 
 export function CustomerResumePageCtrl() {
   const router = useRouter();
@@ -64,8 +56,8 @@ export function CustomerResumePageCtrl() {
     try {
       setLoading(true);
       setError(null);
-      const data = await customerResumeApi.get(customerId);
-      setCustomer(data);
+      const data = await customersApi.getResume(customerId);
+      setCustomer(data as CustomerResumeData);
     } catch (err) {
       console.error('Erro ao buscar dados do cliente:', err);
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
