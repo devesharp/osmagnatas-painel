@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { ColumnConfig } from "@/components/table-listing/table-listing.types";
 import {
   DropdownMenu,
@@ -10,16 +11,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SlOptionsVertical } from "react-icons/sl";
 import { CustomersListingPageItem } from "../customers-listing-page.types";
+import { FileText } from "lucide-react";
 
 // Componente para coluna de ações
 interface ActionsColProps {
   item: CustomersListingPageItem;
   onEdit?: (item: CustomersListingPageItem) => void;
   onView?: (item: CustomersListingPageItem) => void;
+  onResume?: (item: CustomersListingPageItem) => void;
   onDelete?: (item: CustomersListingPageItem) => void;
 }
 
-function ActionsCol({ item, onEdit, onView, onDelete }: ActionsColProps) {
+function ActionsCol({ item, onEdit, onView, onResume, onDelete }: ActionsColProps) {
   return (
     <div className="flex items-center gap-2">
       <DropdownMenu>
@@ -32,6 +35,13 @@ function ActionsCol({ item, onEdit, onView, onDelete }: ActionsColProps) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem
+            onClick={() => onResume?.(item)}
+            className="cursor-pointer"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Resumo
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => onEdit?.(item)}
             className="cursor-pointer"
@@ -60,12 +70,14 @@ function ActionsCol({ item, onEdit, onView, onDelete }: ActionsColProps) {
 interface UseCustomersListingPageColumnsProps {
   onEdit?: (item: CustomersListingPageItem) => void;
   onView?: (item: CustomersListingPageItem) => void;
+  onResume?: (item: CustomersListingPageItem) => void;
   onDelete?: (item: CustomersListingPageItem) => void;
 }
 
 export function useCustomersListingPageColumns({
   onEdit,
   onView,
+  onResume,
   onDelete,
 }: UseCustomersListingPageColumnsProps = {}) {
   const columns: ColumnConfig<CustomersListingPageItem>[] = useMemo(
@@ -136,12 +148,13 @@ export function useCustomersListingPageColumns({
             item={item}
             onEdit={onEdit}
             onView={onView}
+            onResume={onResume}
             onDelete={onDelete}
           />
         ),
       },
     ],
-    [onEdit, onView, onDelete]
+    [onEdit, onView, onResume, onDelete]
   );
 
   return columns;

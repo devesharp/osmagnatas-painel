@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ColumnConfig } from "@/components/table-listing/table-listing.types";
 import { ICustomersListingPageFilters } from "./components/customers-listing-page-filters/customers-listing-page-filters.types";
 import { useCustomersListingPageColumns } from "./customers-listing-page.cols";
@@ -13,6 +14,7 @@ import { customersApi } from "@/api/customers.request";
 import { CustomersListingPageItem } from "./customers-listing-page.types";
 
 export function CustomersListingPageCtrl() {
+  const router = useRouter();
   const [openFilterModal, setOpenFilterModal] = useState(false);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
@@ -50,10 +52,15 @@ export function CustomersListingPageCtrl() {
     // TODO: Implementar exclusão
   };
 
+  const handleResume = (item: CustomersListingPageItem) => {
+    router.push(`/customers/${item.id}/resume`);
+  };
+
   // Configuração das colunas
   const columns: ColumnConfig<CustomersListingPageItem>[] = useCustomersListingPageColumns({
     onEdit: handleEdit,
     onView: handleView,
+    onResume: handleResume,
     onDelete: handleDelete,
   });
 

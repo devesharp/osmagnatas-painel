@@ -180,6 +180,7 @@ export function useAppSidebarCtrl(props: AppSidebarProps) {
     return false;
   };
 
+
   // Função para lidar com clique em item do menu
   const handleMenuItemClick = (url: string) => {
     // Se for link externo (webmail), abre em nova aba
