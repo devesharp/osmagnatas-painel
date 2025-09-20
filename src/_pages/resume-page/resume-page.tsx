@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResumePageCtrl } from "./resume-page.ctrl";
 import { useAuth } from "@/contexts/auth-context";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import Link from "next/link";
 import {
   LineChart,
@@ -24,7 +25,8 @@ import {
   Users,
   CreditCard,
   AlertTriangle,
-  Wallet
+  Wallet,
+  Calendar
 } from "lucide-react";
 
 // Funções auxiliares
@@ -47,7 +49,7 @@ export function ResumePage() {
   const { user } = useAuth();
 
   // Se não há dados ainda, mostra loading ou mensagem
-  if (!ctrl.financial) {
+  if (ctrl.loading) {
     return (
       <div className="w-full p-5">
         <div className="mb-6">
@@ -60,7 +62,8 @@ export function ResumePage() {
     );
   }
 
-  const financial = ctrl.financial;
+  const financial = ctrl.financial; // Dados filtrados por data
+  const fixedFinancial = ctrl.fixedFinancial; // Dados fixos (total do caixa, inadimplência total)
 
   return (
     <div className="w-full p-5">
@@ -69,6 +72,20 @@ export function ResumePage() {
         <p className="text-muted-foreground text-sm">
           Visão geral das suas finanças e transações
         </p>
+      </div>
+
+      {/* Filtro de Data */}
+      <div className="mb-6 flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium">Período:</span>
+        </div>
+        <DateRangePicker
+          date={ctrl.dateRange}
+          onDateChange={ctrl.setDateRange}
+          placeholder="Últimos 15 dias"
+          className="w-auto"
+        />
       </div>
 
       {/* Cards de Resumo Financeiro */}
@@ -81,7 +98,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              {formatCurrency(financial.totalCaixa)}
+              {formatCurrency(fixedFinancial.totalCaixa)}
             </div>
             <p className="text-xs text-muted-foreground">
               Disponível para uso
@@ -97,7 +114,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {formatCurrency(financial.entradaMes)}
+              {formatCurrency(ctrl.financial?.entradaMes || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
               Recebimentos do mês
@@ -113,7 +130,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {formatCurrency(financial.saidaMes)}
+              {formatCurrency(ctrl.financial?.saidaMes || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
               Gastos do mês
@@ -129,7 +146,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              {formatCurrency(financial.inadimplenciaAtual)}
+              {formatCurrency(fixedFinancial.inadimplenciaAtual)}
             </div>
             <p className="text-xs text-muted-foreground">
               Valores pendentes
@@ -139,28 +156,89 @@ export function ResumePage() {
 
         {/* Saldo */}
         <Card className={`bg-gradient-to-br ${
-          financial.saldo >= 0
+          ctrl.customMetrics.saldoPeriodo >= 0
             ? 'from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20'
             : 'from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20'
         }`}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Saldo</CardTitle>
             <DollarSign className={`h-4 w-4 ${
-              financial.saldo >= 0 ? 'text-emerald-600' : 'text-red-600'
+              ctrl.customMetrics.saldoPeriodo >= 0 ? 'text-emerald-600' : 'text-red-600'
             }`} />
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${
-              financial.saldo >= 0 ? 'text-emerald-600' : 'text-red-600'
+              ctrl.customMetrics.saldoPeriodo >= 0 ? 'text-emerald-600' : 'text-red-600'
             }`}>
-              {formatCurrency(financial.saldo)}
+              {formatCurrency(ctrl.customMetrics.saldoPeriodo)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Entradas - Saídas - Inadimplência
+              Entradas - Saídas (período selecionado)
             </p>
           </CardContent>
         </Card>
       </div>
+
+      {/* Cards de Período Selecionado */}
+      {ctrl.dateRange && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {/* Entrada no Período */}
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-l-4 border-l-green-500">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Entrada no Período</CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {formatCurrency(ctrl.customMetrics.entradaPeriodo)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Recebimentos do período
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Saída no Período */}
+          <Card className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-l-red-500">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Saída no Período</CardTitle>
+              <TrendingDown className="h-4 w-4 text-red-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {formatCurrency(ctrl.customMetrics.saidaPeriodo)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Gastos do período
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Saldo do Período */}
+          <Card className={`bg-gradient-to-br border-l-4 ${
+            ctrl.customMetrics.saldoPeriodo >= 0
+              ? 'from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-l-emerald-500'
+              : 'from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-l-orange-500'
+          }`}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Saldo do Período</CardTitle>
+              <DollarSign className={`h-4 w-4 ${
+                ctrl.customMetrics.saldoPeriodo >= 0 ? 'text-emerald-600' : 'text-orange-600'
+              }`} />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${
+                ctrl.customMetrics.saldoPeriodo >= 0 ? 'text-emerald-600' : 'text-orange-600'
+              }`}>
+                {formatCurrency(ctrl.customMetrics.saldoPeriodo)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Entradas - Saídas do período
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Gráfico de Entradas e Saídas */}
       <div className="mb-8">
@@ -168,13 +246,16 @@ export function ResumePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
-              Entradas e Saídas - Últimos 15 Dias
+              {ctrl.dateRange
+                ? `Entradas e Saídas - ${ctrl.dateRange.from?.toLocaleDateString('pt-BR')} a ${ctrl.dateRange.to?.toLocaleDateString('pt-BR')}`
+                : 'Entradas e Saídas - Últimos 15 Dias'
+              }
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={financial.grafico15Dias}>
+                <BarChart data={ctrl.financial?.grafico15Dias || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="date"
@@ -220,7 +301,7 @@ export function ResumePage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{financial.clientesAtivos}</div>
+            <div className="text-2xl font-bold">{ctrl.fixedFinancial?.clientesAtivos || 0}</div>
             <p className="text-xs text-muted-foreground">
               <Button
                 variant="link"
@@ -239,7 +320,7 @@ export function ResumePage() {
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{financial.transactionsTotal}</div>
+            <div className="text-2xl font-bold">{ctrl.financial?.transactionsTotal || 0}</div>
             <p className="text-xs text-muted-foreground">
               <Button
                 variant="link"
@@ -259,7 +340,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              {financial.transactionsPendentes}
+              {ctrl.financial?.transactionsPendentes || 0}
             </div>
             <p className="text-xs text-muted-foreground">
               Aguardando pagamento
@@ -274,7 +355,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {financial.transactionsPagas}
+              {ctrl.financial?.transactionsPagas || 0}
             </div>
             <p className="text-xs text-muted-foreground">
               Concluídas com sucesso

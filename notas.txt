@@ -1,0 +1,20 @@
+Dashboard
+- Data personalizada
+- Total no caixa (Total de tudo)
+- Inadimplencia total (total de tudo)
+- O restante deve ficar separado para um data personalizado
+- Entradas e saidas grafico deve ficar com o personalizado (colocar dentro quantidade de entradas e saidas) e saldo
+- Na entrada e saida grafico, colocar como inandimplencia
+
+Crud Inadimplencia
+- Associar cliente e valor
+- Ao clicar no botão, pagar, gerar uma transação como paga e deletar inadimplencia
+
+Transação
+- Valor em real
+- Valor em USD
+
+Clientes
+- Verificar opções que não funciona editar, visualizar, deletar
+- Overview, por cliente em "Visualizar"
+- Colocar mais um box, "senha do email"
