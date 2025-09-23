@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Transaction, UpdateTransactionRequest, APIResponse, TransactionStatus } from '@/types/transaction'
+import { Inadimplencia, UpdateInadimplenciaRequest, APIResponse } from '@/types/inadimplencia'
 import { verifyToken, getUserById } from '@/lib/auth'
 import { LoggerService } from '@/lib/logger'
 
@@ -94,7 +94,7 @@ async function authenticateUser(request: NextRequest) {
   }
 }
 
-// GET /api/transactions/[id] - Buscar transaction por ID
+// GET /api/inadimplencia/[id] - Buscar inadimplência por ID
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -121,7 +121,7 @@ export async function GET(
       )
     }
 
-    const transaction = await prisma.transaction.findUnique({
+    const inadimplencia = await prisma.inadimplencia.findUnique({
       where: { id },
       include: {
         customer: {
@@ -141,13 +141,13 @@ export async function GET(
       }
     })
 
-    if (!transaction) {
+    if (!inadimplencia) {
       return NextResponse.json(
         {
           success: false,
           data: {
-            error: 'Transaction não encontrada',
-            message: 'Não foi possível encontrar a transaction com o ID especificado'
+            error: 'Inadimplência não encontrada',
+            message: 'Não foi possível encontrar a inadimplência com o ID especificado'
           }
         },
         { status: 404 }
@@ -160,27 +160,27 @@ export async function GET(
       return authenticatedUser
     }
 
-    await LoggerService.logViewTransaction(
+    await LoggerService.logViewInadimplencia(
       authenticatedUser.id,
       authenticatedUser.user_name || authenticatedUser.email,
-      transaction.id
+      inadimplencia.id
     )
 
-    const response: APIResponse<Transaction> = {
+    const response: APIResponse<Inadimplencia> = {
       success: true,
-      data: transaction
+      data: inadimplencia
     }
 
     return NextResponse.json(response)
 
   } catch (error) {
-    console.error('Erro ao buscar transaction:', error)
+    console.error('Erro ao buscar inadimplência:', error)
     return NextResponse.json(
       {
         success: false,
         data: {
           error: 'Erro interno do servidor',
-          message: 'Não foi possível buscar a transaction'
+          message: 'Não foi possível buscar a inadimplência'
         }
       },
       { status: 500 }
@@ -188,7 +188,7 @@ export async function GET(
   }
 }
 
-// PUT /api/transactions/[id] - Atualizar transaction
+// PUT /api/inadimplencia/[id] - Atualizar inadimplência
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -200,6 +200,7 @@ export async function PUT(
       return authResult
     }
 
+    const authenticatedUser = authResult
     const id = parseInt(params.id)
 
     if (isNaN(id)) {
@@ -215,20 +216,20 @@ export async function PUT(
       )
     }
 
-    const body: UpdateTransactionRequest = await request.json()
+    const body: UpdateInadimplenciaRequest = await request.json()
 
-    // Verificar se transaction existe
-    const existingTransaction = await prisma.transaction.findUnique({
+    // Verificar se inadimplência existe
+    const existingInadimplencia = await prisma.inadimplencia.findUnique({
       where: { id }
     })
 
-    if (!existingTransaction) {
+    if (!existingInadimplencia) {
       return NextResponse.json(
         {
           success: false,
           data: {
-            error: 'Transaction não encontrada',
-            message: 'Não foi possível encontrar a transaction com o ID especificado'
+            error: 'Inadimplência não encontrada',
+            message: 'Não foi possível encontrar a inadimplência com o ID especificado'
           }
         },
         { status: 404 }
@@ -255,18 +256,13 @@ export async function PUT(
       }
     }
 
-    // Atualizar transaction
-    const transaction = await prisma.transaction.update({
+    // Atualizar inadimplência
+    const inadimplencia = await prisma.inadimplencia.update({
       where: { id },
       data: {
         ...(body.customer_id && { customer_id: body.customer_id }),
-        ...(body.status && { status: body.status }),
-        ...(body.payment_type && { payment_type: body.payment_type }),
-        ...(body.notes !== undefined && { notes: body.notes }),
         ...(body.amount && { amount: body.amount }),
-        ...(body.moeda && { moeda: body.moeda }),
-        ...(body.expired_at !== undefined && { expired_at: body.expired_at ? new Date(body.expired_at) : null }),
-        ...(body.payed_at !== undefined && { payed_at: body.payed_at ? new Date(body.payed_at) : null }),
+        ...(body.payed !== undefined && { payed: body.payed }),
       },
       include: {
         customer: {
@@ -287,28 +283,28 @@ export async function PUT(
     })
 
     // Registrar log de atualização
-    await LoggerService.logUpdateTransaction(
-      authResult.id,
-      authResult.user_name || authResult.email,
-      transaction.id,
-      transaction.amount
+    await LoggerService.logUpdateInadimplencia(
+      authenticatedUser.id,
+      authenticatedUser.user_name || authenticatedUser.email,
+      inadimplencia.id,
+      inadimplencia.amount
     )
 
-    const response: APIResponse<Transaction> = {
+    const response: APIResponse<Inadimplencia> = {
       success: true,
-      data: transaction
+      data: inadimplencia
     }
 
     return NextResponse.json(response)
 
   } catch (error) {
-    console.error('Erro ao atualizar transaction:', error)
+    console.error('Erro ao atualizar inadimplência:', error)
     return NextResponse.json(
       {
         success: false,
         data: {
           error: 'Erro interno do servidor',
-          message: 'Não foi possível atualizar a transaction'
+          message: 'Não foi possível atualizar a inadimplência'
         }
       },
       { status: 500 }
@@ -316,7 +312,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/transactions/[id] - Deletar transaction
+// DELETE /api/inadimplencia/[id] - Deletar inadimplência
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -328,6 +324,7 @@ export async function DELETE(
       return authResult
     }
 
+    const authenticatedUser = authResult
     const id = parseInt(params.id)
 
     if (isNaN(id)) {
@@ -343,18 +340,18 @@ export async function DELETE(
       )
     }
 
-    // Verificar se transaction existe
-    const existingTransaction = await prisma.transaction.findUnique({
+    // Verificar se inadimplência existe
+    const existingInadimplencia = await prisma.inadimplencia.findUnique({
       where: { id }
     })
 
-    if (!existingTransaction) {
+    if (!existingInadimplencia) {
       return NextResponse.json(
         {
           success: false,
           data: {
-            error: 'Transaction não encontrada',
-            message: 'Não foi possível encontrar a transaction com o ID especificado'
+            error: 'Inadimplência não encontrada',
+            message: 'Não foi possível encontrar a inadimplência com o ID especificado'
           }
         },
         { status: 404 }
@@ -362,21 +359,21 @@ export async function DELETE(
     }
 
     // Salvar dados antes de deletar para o log
-    const transactionToDelete = await prisma.transaction.findUnique({
+    const inadimplenciaToDelete = await prisma.inadimplencia.findUnique({
       where: { id }
     })
 
-    // Deletar transaction
-    await prisma.transaction.delete({
+    // Deletar inadimplência
+    await prisma.inadimplencia.delete({
       where: { id }
     })
 
     // Registrar log de exclusão
-    await LoggerService.logDeleteTransaction(
-      authResult.id,
-      authResult.user_name || authResult.email,
+    await LoggerService.logDeleteInadimplencia(
+      authenticatedUser.id,
+      authenticatedUser.user_name || authenticatedUser.email,
       id,
-      transactionToDelete?.amount || 0
+      inadimplenciaToDelete?.amount || 0
     )
 
     const response: APIResponse<null> = {
@@ -387,14 +384,14 @@ export async function DELETE(
     return NextResponse.json(response)
 
   } catch (error) {
-    console.error('Erro ao deletar transaction:', error)
+    console.error('Erro ao deletar inadimplência:', error)
 
     return NextResponse.json(
       {
         success: false,
         data: {
           error: 'Erro interno do servidor',
-          message: 'Não foi possível deletar a transaction'
+          message: 'Não foi possível deletar a inadimplência'
         }
       },
       { status: 500 }

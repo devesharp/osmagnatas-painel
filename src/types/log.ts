@@ -9,6 +9,10 @@ export type LogType =
   | 'DELETE_CUSTOMER'
   | 'VIEW_TRANSACTION'
   | 'VIEW_CUSTOMER'
+  | 'CREATE_INADIMPLENCIA'
+  | 'UPDATE_INADIMPLENCIA'
+  | 'DELETE_INADIMPLENCIA'
+  | 'VIEW_INADIMPLENCIA'
 
 export interface Log {
   id: number
@@ -41,4 +45,10 @@ export interface LogFilters {
 export interface APIResponse<T> {
   success: boolean
   data: T
+}
+
+export interface APIResponseSearch<T> {
+  results: T[]
+  count: number
+  total: number
 }

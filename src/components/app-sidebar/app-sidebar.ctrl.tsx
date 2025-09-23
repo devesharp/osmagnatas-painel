@@ -152,6 +152,11 @@ export function useAppSidebarCtrl(props: AppSidebarProps) {
           url: "/transactions",
         },
         {
+          title: "Inadimplências",
+          icon: List,
+          url: "/inadimplencia/listing",
+        },
+        {
           title: "Clientes",
           icon: Users,
           url: "/customers",

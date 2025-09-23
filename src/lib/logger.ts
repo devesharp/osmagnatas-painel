@@ -175,4 +175,67 @@ export class LoggerService {
       `Usuário ${userName} visualizou cliente "${customerName}" (#${customerId})`
     )
   }
+
+  /**
+   * Registra criação de inadimplência
+   */
+  static async logCreateInadimplencia(
+    userId: number,
+    userName: string,
+    inadimplenciaId: number,
+    amount: number
+  ): Promise<void> {
+    await this.log(
+      userId,
+      'CREATE_INADIMPLENCIA',
+      `Usuário ${userName} criou inadimplência #${inadimplenciaId} no valor de R$ ${amount.toFixed(2)}`
+    )
+  }
+
+  /**
+   * Registra atualização de inadimplência
+   */
+  static async logUpdateInadimplencia(
+    userId: number,
+    userName: string,
+    inadimplenciaId: number,
+    amount: number
+  ): Promise<void> {
+    await this.log(
+      userId,
+      'UPDATE_INADIMPLENCIA',
+      `Usuário ${userName} atualizou inadimplência #${inadimplenciaId} no valor de R$ ${amount.toFixed(2)}`
+    )
+  }
+
+  /**
+   * Registra exclusão de inadimplência
+   */
+  static async logDeleteInadimplencia(
+    userId: number,
+    userName: string,
+    inadimplenciaId: number,
+    amount: number
+  ): Promise<void> {
+    await this.log(
+      userId,
+      'DELETE_INADIMPLENCIA',
+      `Usuário ${userName} excluiu inadimplência #${inadimplenciaId} no valor de R$ ${amount.toFixed(2)}`
+    )
+  }
+
+  /**
+   * Registra visualização de inadimplência
+   */
+  static async logViewInadimplencia(
+    userId: number,
+    userName: string,
+    inadimplenciaId: number
+  ): Promise<void> {
+    await this.log(
+      userId,
+      'VIEW_INADIMPLENCIA',
+      `Usuário ${userName} visualizou inadimplência #${inadimplenciaId}`
+    )
+  }
 }

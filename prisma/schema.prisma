@@ -24,10 +24,11 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relação de exemplo
-  posts       Post[]
-  customers   Customer[]
+  posts        Post[]
+  customers    Customer[]
   transactions Transaction[]
-  logs        Log[]
+  inadimplencia Inadimplencia[]
+  logs         Log[]
 
   @@map("users")
 }
@@ -69,8 +70,9 @@ model Customer {
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
-  creator      User         @relation(fields: [created_by], references: [id])
+  creator      User            @relation(fields: [created_by], references: [id])
   transactions Transaction[]
+  inadimplencia Inadimplencia[]
 
   @@map("customers")
 }
@@ -98,6 +100,10 @@ enum LogType {
   DELETE_CUSTOMER
   VIEW_TRANSACTION
   VIEW_CUSTOMER
+  CREATE_INADIMPLENCIA
+  UPDATE_INADIMPLENCIA
+  DELETE_INADIMPLENCIA
+  VIEW_INADIMPLENCIA
 }
 
 model Transaction {
@@ -118,6 +124,22 @@ model Transaction {
   creator      User               @relation(fields: [created_by], references: [id])
 
   @@map("transactions")
+}
+
+// Modelo Inadimplencia
+model Inadimplencia {
+  id           Int      @id @default(autoincrement())
+  customer_id  Int
+  amount       Float
+  payed        Boolean  @default(false)
+  created_by   Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  customer Customer @relation(fields: [customer_id], references: [id])
+  creator  User     @relation(fields: [created_by], references: [id])
+
+  @@map("inadimplencia")
 }
 
 // Modelo Log

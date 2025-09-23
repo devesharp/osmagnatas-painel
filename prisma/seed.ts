@@ -250,6 +250,79 @@ async function main() {
     },
   })
 
+  // Criar inadimplências de exemplo
+  const inadimplencia1 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer1.id,
+      amount: 450.00,
+      payed: false,
+      created_by: admin.id,
+    },
+  })
+
+  const inadimplencia2 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer2.id,
+      amount: 1200.50,
+      payed: false,
+      created_by: user1.id,
+    },
+  })
+
+  const inadimplencia3 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer3.id,
+      amount: 75.25,
+      payed: true,
+      created_by: user2.id,
+    },
+  })
+
+  const inadimplencia4 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer4.id,
+      amount: 890.00,
+      payed: false,
+      created_by: admin.id,
+    },
+  })
+
+  const inadimplencia5 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer1.id,
+      amount: 230.00,
+      payed: true,
+      created_by: user1.id,
+    },
+  })
+
+  const inadimplencia6 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer2.id,
+      amount: 567.80,
+      payed: false,
+      created_by: user2.id,
+    },
+  })
+
+  const inadimplencia7 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer3.id,
+      amount: 180.00,
+      payed: false,
+      created_by: admin.id,
+    },
+  })
+
+  const inadimplencia8 = await prisma.inadimplencia.create({
+    data: {
+      customer_id: customer4.id,
+      amount: 350.00,
+      payed: true,
+      created_by: user1.id,
+    },
+  })
+
   console.log('✅ Transactions criadas:', {
     transaction1: { id: transaction1.id, customer: customer1.name, status: transaction1.status, amount: transaction1.amount, moeda: transaction1.moeda },
     transaction2: { id: transaction2.id, customer: customer2.name, status: transaction2.status, amount: transaction2.amount, moeda: transaction2.moeda },
@@ -259,6 +332,17 @@ async function main() {
     transaction6: { id: transaction6.id, customer: customer2.name, status: transaction6.status, amount: transaction6.amount, moeda: transaction6.moeda },
     transaction7: { id: transaction7.id, customer: customer3.name, status: transaction7.status, amount: transaction7.amount, moeda: transaction7.moeda },
     transaction8: { id: transaction8.id, customer: customer4.name, status: transaction8.status, amount: transaction8.amount, moeda: transaction8.moeda }
+  })
+
+  console.log('✅ Inadimplências criadas:', {
+    inadimplencia1: { id: inadimplencia1.id, customer: customer1.name, amount: inadimplencia1.amount, payed: inadimplencia1.payed },
+    inadimplencia2: { id: inadimplencia2.id, customer: customer2.name, amount: inadimplencia2.amount, payed: inadimplencia2.payed },
+    inadimplencia3: { id: inadimplencia3.id, customer: customer3.name, amount: inadimplencia3.amount, payed: inadimplencia3.payed },
+    inadimplencia4: { id: inadimplencia4.id, customer: customer4.name, amount: inadimplencia4.amount, payed: inadimplencia4.payed },
+    inadimplencia5: { id: inadimplencia5.id, customer: customer1.name, amount: inadimplencia5.amount, payed: inadimplencia5.payed },
+    inadimplencia6: { id: inadimplencia6.id, customer: customer2.name, amount: inadimplencia6.amount, payed: inadimplencia6.payed },
+    inadimplencia7: { id: inadimplencia7.id, customer: customer3.name, amount: inadimplencia7.amount, payed: inadimplencia7.payed },
+    inadimplencia8: { id: inadimplencia8.id, customer: customer4.name, amount: inadimplencia8.amount, payed: inadimplencia8.payed }
   })
 
   // Criar logs de exemplo - mais abrangente
@@ -347,6 +431,44 @@ async function main() {
       date: new Date(Date.now() - 10 * 60 * 1000) // 10 minutos atrás
     },
 
+    // Ações com inadimplências
+    {
+      user_id: admin.id,
+      log_type: 'CREATE_INADIMPLENCIA' as const,
+      description: `Usuário admin criou inadimplência #${inadimplencia1.id} no valor de R$ ${inadimplencia1.amount.toFixed(2)}`,
+      date: new Date(Date.now() - 55 * 60 * 1000) // 55 minutos atrás
+    },
+    {
+      user_id: user1.id,
+      log_type: 'UPDATE_INADIMPLENCIA' as const,
+      description: `Usuário alice atualizou inadimplência #${inadimplencia2.id} no valor de R$ ${inadimplencia2.amount.toFixed(2)}`,
+      date: new Date(Date.now() - 42 * 60 * 1000) // 42 minutos atrás
+    },
+    {
+      user_id: user2.id,
+      log_type: 'UPDATE_INADIMPLENCIA' as const,
+      description: `Usuário bob atualizou inadimplência #${inadimplencia3.id} no valor de R$ ${inadimplencia3.amount.toFixed(2)}`,
+      date: new Date(Date.now() - 38 * 60 * 1000) // 38 minutos atrás
+    },
+    {
+      user_id: admin.id,
+      log_type: 'DELETE_INADIMPLENCIA' as const,
+      description: `Usuário admin excluiu inadimplência #999 no valor de R$ 200.00`,
+      date: new Date(Date.now() - 28 * 60 * 1000) // 28 minutos atrás
+    },
+    {
+      user_id: user1.id,
+      log_type: 'VIEW_INADIMPLENCIA' as const,
+      description: `Usuário alice visualizou inadimplência #${inadimplencia4.id}`,
+      date: new Date(Date.now() - 18 * 60 * 1000) // 18 minutos atrás
+    },
+    {
+      user_id: user2.id,
+      log_type: 'VIEW_INADIMPLENCIA' as const,
+      description: `Usuário bob visualizou inadimplência #${inadimplencia5.id}`,
+      date: new Date(Date.now() - 12 * 60 * 1000) // 12 minutos atrás
+    },
+
     // Logs de ontem
     {
       user_id: admin.id,
@@ -424,6 +546,10 @@ async function main() {
       VIEW_TRANSACTION: createdLogs.filter(l => l.log_type === 'VIEW_TRANSACTION').length,
       VIEW_CUSTOMER: createdLogs.filter(l => l.log_type === 'VIEW_CUSTOMER').length,
       DELETE_CUSTOMER: createdLogs.filter(l => l.log_type === 'DELETE_CUSTOMER').length,
+      CREATE_INADIMPLENCIA: createdLogs.filter(l => l.log_type === 'CREATE_INADIMPLENCIA').length,
+      UPDATE_INADIMPLENCIA: createdLogs.filter(l => l.log_type === 'UPDATE_INADIMPLENCIA').length,
+      DELETE_INADIMPLENCIA: createdLogs.filter(l => l.log_type === 'DELETE_INADIMPLENCIA').length,
+      VIEW_INADIMPLENCIA: createdLogs.filter(l => l.log_type === 'VIEW_INADIMPLENCIA').length,
     },
     exemplo: {
       primeiro: { id: createdLogs[0].id, type: createdLogs[0].log_type, description: createdLogs[0].description.substring(0, 60) + '...' },
@@ -448,6 +574,11 @@ async function main() {
   console.log('   8 transações criadas com diferentes status (PENDING, PAYED, CANCELED)')
   console.log('   Valores variando de $150.00 a $2500.00')
   console.log('   Serviços: hospedagem, desenvolvimento web, design, consultoria TI, etc.')
+  console.log('')
+  console.log('⚠️ Inadimplências de teste criadas:')
+  console.log('   8 inadimplências criadas com status mistos (pagas e não pagas)')
+  console.log('   Valores variando de $75.25 a $1200.50')
+  console.log('   Distribuídas entre todos os customers para demonstração')
 }
 
 main()
