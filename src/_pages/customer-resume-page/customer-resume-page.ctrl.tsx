@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { customersApi } from "@/api/customers.request";
+import { ICustomerFinancialData } from "./customer-resume-page.types";
 
 // Interface para os dados do resumo do cliente (compatível com Customer)
 interface CustomerResumeData {
@@ -33,6 +34,7 @@ export function CustomerResumePageCtrl() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [customer, setCustomer] = useState<CustomerResumeData | null>(null);
+  const [financial, setFinancial] = useState<ICustomerFinancialData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Extrair ID do cliente da URL
@@ -56,8 +58,15 @@ export function CustomerResumePageCtrl() {
     try {
       setLoading(true);
       setError(null);
-      const data = await customersApi.getResume(customerId);
-      setCustomer(data as CustomerResumeData);
+
+      // Buscar dados do cliente e dados financeiros em paralelo
+      const [customerData, financialData] = await Promise.all([
+        customersApi.getResume(customerId),
+        customersApi.getFinancial(customerId)
+      ]);
+
+      setCustomer(customerData as CustomerResumeData);
+      setFinancial(financialData);
     } catch (err) {
       console.error('Erro ao buscar dados do cliente:', err);
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -79,6 +88,7 @@ export function CustomerResumePageCtrl() {
   return {
     loading,
     customer,
+    financial,
     error,
     goToCustomers,
     refreshData: fetchCustomerData,

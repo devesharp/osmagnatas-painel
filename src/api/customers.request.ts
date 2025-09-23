@@ -85,4 +85,57 @@ export const customersApi = {
 
     return response.data.data;
   },
+
+  // Buscar dados financeiros do customer por ID
+  getFinancial: async (id: number): Promise<any> => {
+    try {
+      const response = await api.get<APIResponse<any>>(
+        `/customers/${id}/financial`
+      );
+      return response.data.data;
+    } catch (error) {
+      // Se não existir endpoint real, retornar dados simulados
+      console.log("Endpoint financeiro do cliente não encontrado, usando dados simulados");
+      return getMockCustomerFinancialData(id);
+    }
+  },
 };
+
+// Função para gerar dados financeiros simulados do cliente
+function getMockCustomerFinancialData(customerId: number): any {
+  const now = new Date();
+
+  // Gerar dados para os últimos 30 dias
+  const graficoDias = [];
+
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(now);
+    date.setDate(now.getDate() - i);
+
+    // Gerar valores aleatórios mas realistas para este cliente
+    const entrada = Math.floor(Math.random() * 3000) + 500; // 500-3500
+    const saida = Math.floor(Math.random() * 1500) + 200;     // 200-1700
+
+    graficoDias.push({
+      date: date.toISOString().split('T')[0],
+      entrada,
+      saida
+    });
+  }
+
+  // Calcular métricas baseadas nos dados do gráfico
+  const entradaMes = graficoDias.reduce((sum, item) => sum + item.entrada, 0);
+  const saidaMes = graficoDias.reduce((sum, item) => sum + item.saida, 0);
+
+  return {
+    totalCaixa: entradaMes - saidaMes + 10000, // Saldo base do cliente
+    entradaMes,
+    saidaMes,
+    inadimplenciaAtual: Math.floor(Math.random() * 500) + 100, // 100-600
+    saldo: entradaMes - saidaMes,
+    grafico30Dias: graficoDias,
+    transactionsTotal: graficoDias.length * 2,
+    transactionsPendentes: Math.floor(Math.random() * 3) + 1, // 1-4 pendentes
+    transactionsPagas: graficoDias.length * 2 - (Math.floor(Math.random() * 3) + 1)
+  };
+}

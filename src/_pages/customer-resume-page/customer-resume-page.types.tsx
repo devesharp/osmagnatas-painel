@@ -27,6 +27,23 @@ export interface ICustomerResumeData {
   };
 }
 
+// Interface para dados financeiros do cliente
+export interface ICustomerFinancialData {
+  totalCaixa: number;
+  entradaMes: number;
+  saidaMes: number;
+  inadimplenciaAtual: number;
+  saldo: number;
+  grafico30Dias: Array<{
+    date: string;
+    entrada: number;
+    saida: number;
+  }>;
+  transactionsTotal: number;
+  transactionsPendentes: number;
+  transactionsPagas: number;
+}
+
 // Interface para formatação de dados
 export interface IFormattedCustomerData extends ICustomerResumeData {
   formattedCreatedAt: string;
