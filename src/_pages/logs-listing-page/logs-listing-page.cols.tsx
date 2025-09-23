@@ -77,6 +77,10 @@ function LogTypeBadge({ logType }: { logType: string }) {
     DELETE_CUSTOMER: { label: 'Excluir Cliente', className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' },
     VIEW_TRANSACTION: { label: 'Visualizar Transação', className: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300' },
     VIEW_CUSTOMER: { label: 'Visualizar Cliente', className: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300' },
+    CREATE_INADIMPLENCIA: { label: 'Criar Inadimplência', className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' },
+    UPDATE_INADIMPLENCIA: { label: 'Editar Inadimplência', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' },
+    DELETE_INADIMPLENCIA: { label: 'Excluir Inadimplência', className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' },
+    VIEW_INADIMPLENCIA: { label: 'Visualizar Inadimplência', className: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300' },
   };
 
   const logConfig = config[logType] || { label: logType, className: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300' };
@@ -111,7 +115,7 @@ export function useLogsListingPageColumns({
       {
         key: "log_type",
         title: "Tipo de Ação",
-        width: "150px",
+        className: "w-[200px]",
         sortable: true,
         render: (item) => <LogTypeBadge logType={item.log_type} />,
       },

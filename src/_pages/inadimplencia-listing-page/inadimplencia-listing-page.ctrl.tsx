@@ -47,14 +47,14 @@ export function InadimplenciaListingPageCtrl() {
   // Handlers para as ações
   const handleEdit = (item: InadimplenciaListingPageItem) => {
     console.log("Editar item:", item.id);
-    // TODO: Implementar navegação para edição
+    window.location.href = `/inadimplencia/${item.id}/edit`;
   };
 
   const handleDelete = async (item: InadimplenciaListingPageItem) => {
     console.log("Excluir item:", item.id);
     try {
       await inadimplenciaApi.delete(item.id);
-      viewList.reload(); // Recarregar a lista após exclusão
+      viewList.reloadPage(); // Recarregar a lista após exclusão
     } catch (error) {
       console.error("Erro ao excluir inadimplência:", error);
     }
@@ -62,6 +62,7 @@ export function InadimplenciaListingPageCtrl() {
 
   const handlePay = async (item: InadimplenciaListingPageItem) => {
     console.log("Pagar inadimplência:", item.id);
+    viewList.setStatusInfo({ isLoading: true });
     try {
       // 1. Primeiro marcar a inadimplência como paga
       await inadimplenciaApi.update(item.id, { payed: true });
@@ -78,9 +79,11 @@ export function InadimplenciaListingPageCtrl() {
 
       await transactionsApi.create(transactionData);
 
+      viewList.setStatusInfo({ isLoading: false });
       // 3. Recarregar a lista (a inadimplência paga não aparecerá mais)
-      viewList.reload();
+      viewList.reloadPage()
     } catch (error) {
+      viewList.setStatusInfo({ isLoading: false });
       console.error("Erro ao processar pagamento:", error);
     }
   };

@@ -28,7 +28,7 @@ export function InadimplenciaListingPage() {
                 <Filter className="h-4 w-4 mr-2" />
                 Filtros
               </Button>
-              <Button onClick={() => console.log("Nova inadimplência")}>
+              <Button onClick={() => window.location.href = '/inadimplencia/create'}>
                 <Plus className="h-4 w-4 mr-2" />
                 Nova Inadimplência Pendente
               </Button>

@@ -29,13 +29,15 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
       scroll: false,
     });
   };
+
+  console.log(user.user_name);
   
   return (
     <div className="flex h-screen w-screen w-full">
       <AppSidebar 
         user={{
-          name: user?.USER_NAME || '',
-          email: user?.EMAIL || '',
+          name: user?.user_name || '',
+          email: user?.email || '',
           avatar: '',
         }}
         currentPath={pathname}
