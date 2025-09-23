@@ -22,7 +22,7 @@ export function InadimplenciaListingPageFilters(props: InadimplenciaListingPageF
         props.onRequestClose?.();
         props.onFiltersApply(ctrl.methods.getValues());
       }}
-      title="Filtros de Inadimplências"
+      title="Filtros de Inadimplências Pendentes"
       submitButtonText="Aplicar Filtros"
       className="mb-6"
     >
@@ -36,18 +36,14 @@ export function InadimplenciaListingPageFilters(props: InadimplenciaListingPageF
             <Input
               name="search"
               title="Buscar"
-              placeholder="Buscar por nome ou email do cliente..."
+              placeholder="Buscar inadimplências pendentes..."
             />
 
-            {/* Campo de status de pagamento */}
-            <Select
+            {/* Campo de status de pagamento - oculto (sempre filtra por pendente) */}
+            <input
+              type="hidden"
               name="payed"
-              title="Status de Pagamento"
-              options={[
-                { value: "-", label: "Todos" },
-                { value: "true", label: "Pago" },
-                { value: "false", label: "Pendente" },
-              ]}
+              value="false"
             />
 
             {/* Campo de valor mínimo */}

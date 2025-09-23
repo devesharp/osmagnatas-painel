@@ -18,9 +18,9 @@ export function InadimplenciaListingPage() {
         <div className="mx-auto">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-semibold">Inadimplências</h1>
+              <h1 className="text-2xl font-semibold">Inadimplências Pendentes</h1>
               <p className="text-muted-foreground">
-                Gerencie inadimplências de clientes
+                Gerencie inadimplências não pagas de clientes
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -30,7 +30,7 @@ export function InadimplenciaListingPage() {
               </Button>
               <Button onClick={() => console.log("Nova inadimplência")}>
                 <Plus className="h-4 w-4 mr-2" />
-                Nova Inadimplência
+                Nova Inadimplência Pendente
               </Button>
             </div>
           </div>

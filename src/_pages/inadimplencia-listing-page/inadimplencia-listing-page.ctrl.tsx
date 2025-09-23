@@ -13,10 +13,12 @@ import {
   useViewList,
 } from "@devesharp/react-hooks-v2";
 
-// API para busca de inadimplências
+// API para busca de inadimplências (apenas não pagas)
 const inadimplenciaListingPageApi = {
   search: async (filters: IInadimplenciaListingPageFilters) => {
-    return await inadimplenciaApi.search(filters);
+    // Sempre filtrar para mostrar apenas inadimplências não pagas
+    const searchFilters = { ...filters, payed: false };
+    return await inadimplenciaApi.search(searchFilters);
   },
 };
 
@@ -61,7 +63,10 @@ export function InadimplenciaListingPageCtrl() {
   const handlePay = async (item: InadimplenciaListingPageItem) => {
     console.log("Pagar inadimplência:", item.id);
     try {
-      // Criar transação de pagamento
+      // 1. Primeiro marcar a inadimplência como paga
+      await inadimplenciaApi.update(item.id, { payed: true });
+
+      // 2. Criar transação de pagamento
       const transactionData = {
         customer_id: item.customer_id,
         amount: item.amount,
@@ -72,9 +77,11 @@ export function InadimplenciaListingPageCtrl() {
       };
 
       await transactionsApi.create(transactionData);
-      viewList.reload(); // Recarregar a lista após pagamento
+
+      // 3. Recarregar a lista (a inadimplência paga não aparecerá mais)
+      viewList.reload();
     } catch (error) {
-      console.error("Erro ao criar transação de pagamento:", error);
+      console.error("Erro ao processar pagamento:", error);
     }
   };
 
