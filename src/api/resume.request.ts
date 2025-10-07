@@ -37,7 +37,7 @@ export const resumeApi = {
   financial: async (dateRange?: DateRange): Promise<FinancialData> => {
     try {
       // Tentar buscar da API real primeiro
-      const params: any = {};
+      const params: Record<string, string> = {};
 
       if (dateRange?.from) {
         params.start_date = dateRange.from.toISOString().split('T')[0];
@@ -87,7 +87,9 @@ function getMockFinancialData(dateRange?: DateRange): FinancialData {
     graficoDias.push({
       date: date.toISOString().split('T')[0],
       entrada,
-      saida
+      saida,
+      inadimplenciaCriada: Math.floor(Math.random() * 1000),
+      inadimplenciaPaga: Math.floor(Math.random() * 800)
     });
   }
 
@@ -107,6 +109,7 @@ function getMockFinancialData(dateRange?: DateRange): FinancialData {
     saldo: entradaMes - saidaMes - valorInadimplencia,
     grafico15Dias: graficoDias, // Mantém o nome da propriedade original
     clientesAtivos: Math.floor(Math.random() * 50) + 20,
+    clientesInadimplentes: Math.floor(Math.random() * 10) + 2,
     transactionsTotal: graficoDias.length * 3,
     transactionsPendentes,
     transactionsPagas: graficoDias.length * 2

@@ -87,7 +87,7 @@ function StatusCol({ status }: { status: TransactionStatus }) {
 function AmountCol({ amount, moeda }: { amount: number; moeda: string }) {
   const formattedAmount = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: moeda || 'BRL',
+    currency: 'BRL',
   }).format(amount);
 
   return <span className="font-mono">{formattedAmount}</span>;
@@ -169,13 +169,6 @@ export function useTransactionsListingPageColumns({
         width: "120px",
         sortable: true,
         render: (item) => <AmountCol amount={item.amount} moeda={item.moeda} />,
-      },
-      {
-        key: "moeda",
-        title: "Moeda",
-        width: "80px",
-        sortable: true,
-        render: (item) => <span className="text-sm">{item.moeda}</span>,
       },
       {
         key: "expired_at",

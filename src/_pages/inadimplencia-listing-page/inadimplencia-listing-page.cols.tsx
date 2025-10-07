@@ -60,7 +60,7 @@ function AmountCol({ item }: { item: InadimplenciaListingPageItem }) {
   return (
     <div className="flex flex-col">
       <span className={cn("font-semibold text-primary", isPaid && "text-green-600")}>
-        ${item.amount.toFixed(2)}
+        R${item.amount.toFixed(2)}
       </span>
       {item.amount_payed > 0 && (
         <div className="text-xs">

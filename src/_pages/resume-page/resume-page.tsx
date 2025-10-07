@@ -98,7 +98,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              {formatCurrency(fixedFinancial.totalCaixa)}
+              {formatCurrency(fixedFinancial?.totalCaixa || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
               Disponível para uso
@@ -146,7 +146,7 @@ export function ResumePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              {formatCurrency(fixedFinancial.inadimplenciaAtual)}
+              {formatCurrency(fixedFinancial?.inadimplenciaAtual || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
               Valores pendentes
@@ -261,6 +261,9 @@ export function ResumePage() {
                     dataKey="date"
                     tickFormatter={formatDate}
                     fontSize={12}
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
                   />
                   <YAxis
                     tickFormatter={(value) => `R$ ${value/1000}k`}
@@ -321,7 +324,7 @@ export function ResumePage() {
       </div>
 
       {/* Cards de Estatísticas Adicionais */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Clientes Ativos</CardTitle>
@@ -337,6 +340,21 @@ export function ResumePage() {
               >
                 Ver clientes →
               </Button>
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Clientes Inadimplentes</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {ctrl.fixedFinancial?.clientesInadimplentes || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Com pendências em aberto
             </p>
           </CardContent>
         </Card>

@@ -104,10 +104,27 @@ export async function GET(request: NextRequest) {
 
     const authenticatedUser = authResult
 
-    // Buscar dados dos últimos 15 dias
-    const endDate = new Date()
-    const startDate = new Date()
-    startDate.setDate(endDate.getDate() - 15)
+    // Extrair parâmetros de data da query string
+    const { searchParams } = new URL(request.url)
+    const startDateParam = searchParams.get('start_date')
+    const endDateParam = searchParams.get('end_date')
+
+    // Configurar período de busca
+    let startDate: Date
+    let endDate: Date
+
+    if (startDateParam && endDateParam) {
+      // Se as datas foram fornecidas, usar elas
+      startDate = new Date(startDateParam)
+      endDate = new Date(endDateParam)
+      // Ajustar o final do dia para incluir todas as transações do dia
+      endDate.setHours(23, 59, 59, 999)
+    } else {
+      // Caso contrário, usar últimos 15 dias
+      endDate = new Date()
+      startDate = new Date()
+      startDate.setDate(endDate.getDate() - 15)
+    }
 
     // Buscar transactions dos últimos 15 dias
     const transactions = await prisma.transaction.findMany({
@@ -155,7 +172,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Calcular métricas dos últimos 15 dias
+    // Calcular métricas do período
     let entradaMes = 0
     let saidaMes = 0
     const grafico15Dias: Array<{
@@ -174,9 +191,14 @@ export async function GET(request: NextRequest) {
       inadimplenciaPaga: number;
     }> = {}
 
-    for (let i = 14; i >= 0; i--) {
-      const date = new Date()
-      date.setDate(date.getDate() - i)
+    // Calcular número de dias entre startDate e endDate
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    // Criar estrutura de dados para cada dia do período
+    for (let i = 0; i <= diffDays; i++) {
+      const date = new Date(startDate)
+      date.setDate(startDate.getDate() + i)
       const dateKey = date.toISOString().split('T')[0]
       dailyData[dateKey] = { 
         entrada: 0, 
@@ -274,6 +296,16 @@ export async function GET(request: NextRequest) {
       return sum + saldoDevedor
     }, 0)
 
+    // Calcular número de clientes inadimplentes (com saldo devedor > 0)
+    const clientesInadimplentesIds = new Set<number>()
+    inadimplenciasAtuais.forEach(item => {
+      const saldoDevedor = item.amount - item.amount_payed
+      if (saldoDevedor > 0 && item.customer_id) {
+        clientesInadimplentesIds.add(item.customer_id)
+      }
+    })
+    const clientesInadimplentes = clientesInadimplentesIds.size
+
     // Calcular saldo (recebido - pendente)
     const totalRecebido = entradaMes
     const saldo = totalRecebido - inadimplenciaAtual
@@ -289,6 +321,7 @@ export async function GET(request: NextRequest) {
       saldo,
       grafico15Dias,
       clientesAtivos,
+      clientesInadimplentes,
       transactionsTotal: totalTransactions,
       transactionsPendentes,
       transactionsPagas

@@ -17,6 +17,7 @@ export interface FinancialData {
 
   // Métricas adicionais
   clientesAtivos: number;
+  clientesInadimplentes: number;
   transactionsTotal: number;
   transactionsPendentes: number;
   transactionsPagas: number;
