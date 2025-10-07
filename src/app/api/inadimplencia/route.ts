@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get('sort') || 'createdAt'
     const limit = parseInt(searchParams.get('limit') || '10')
     const offset = parseInt(searchParams.get('offset') || '0')
-    const payed = searchParams.get('payed') ? searchParams.get('payed') === 'true' : undefined
+    // const payed = searchParams.get('payed') ? searchParams.get('payed') === 'true' : undefined
     const customer_id = searchParams.get('customer_id') ? parseInt(searchParams.get('customer_id')!) : undefined
     const amount_min = searchParams.get('amount_min') ? parseFloat(searchParams.get('amount_min')!) : undefined
     const amount_max = searchParams.get('amount_max') ? parseFloat(searchParams.get('amount_max')!) : undefined
@@ -129,9 +129,9 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    if (payed !== undefined) {
-      where.payed = payed
-    }
+    // if (payed !== undefined) {
+    //   where.payed = payed
+    // }
 
     if (customer_id) {
       where.customer_id = customer_id

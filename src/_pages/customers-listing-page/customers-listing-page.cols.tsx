@@ -39,7 +39,6 @@ function ActionsCol({ item, onEdit, onView, onResume, onDelete }: ActionsColProp
             onClick={() => onResume?.(item)}
             className="cursor-pointer"
           >
-            <FileText className="h-4 w-4 mr-2" />
             Resumo
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -48,18 +47,12 @@ function ActionsCol({ item, onEdit, onView, onResume, onDelete }: ActionsColProp
           >
             Editar
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => onView?.(item)}
-            className="cursor-pointer"
-          >
-            Visualizar
-          </DropdownMenuItem>
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => onDelete?.(item)}
             className="cursor-pointer"
           >
             Excluir
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

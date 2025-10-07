@@ -136,8 +136,6 @@ export function CustomersFormPage() {
                   <Input
                     name="access_password"
                     title="Senha de Acesso"
-                    type="password"
-                    
                   />
                 </div>
               </div>

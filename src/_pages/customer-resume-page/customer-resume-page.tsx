@@ -299,13 +299,13 @@ export function CustomerResumePage() {
           <CardContent>
             <div className="space-y-2">
               <Button variant="outline" className="w-full justify-start" asChild>
-                <Link href={`/customers/form/${customer.id}`}>
+                <Link href={`/customers/${customer.id}/edit`}>
                   <Edit className="h-4 w-4 mr-2" />
                   Editar Cliente
                 </Link>
               </Button>
               <Button variant="outline" className="w-full justify-start" asChild>
-                <Link href="/transactions/listing">
+                <Link href={`/transactions?customer_id=${customer.id}`}>
                   Ver Transações
                 </Link>
               </Button>

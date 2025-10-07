@@ -22,7 +22,7 @@ export function TransactionsViewPageCtrl() {
   });
 
   const handleEdit = () => {
-    router.push(`/transactions/${id}/edit`);
+    router.push(`/transactions/edit/${id}`);
   };
 
   const handleBack = () => {

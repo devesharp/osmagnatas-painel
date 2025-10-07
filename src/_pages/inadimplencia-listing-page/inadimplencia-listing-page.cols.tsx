@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { InadimplenciaListingPageItem } from "./inadimplencia-listing-page.types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 // Componente para coluna de ações
 interface ActionsColProps {
@@ -58,7 +59,7 @@ function AmountCol({ item }: { item: InadimplenciaListingPageItem }) {
 
   return (
     <div className="flex flex-col">
-      <span className="font-semibold text-green-600">
+      <span className={cn("font-semibold text-primary", isPaid && "text-green-600")}>
         ${item.amount.toFixed(2)}
       </span>
       {item.amount_payed > 0 && (

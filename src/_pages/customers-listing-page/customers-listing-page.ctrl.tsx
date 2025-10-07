@@ -39,6 +39,7 @@ export function CustomersListingPageCtrl() {
   // Handlers para as ações
   const handleEdit = (item: CustomersListingPageItem) => {
     console.log("Editar item:", item.id);
+    router.push(`/customers/${item.id}/edit`);
     // TODO: Implementar navegação para edição
   };
 
@@ -50,6 +51,7 @@ export function CustomersListingPageCtrl() {
   const handleDelete = (item: CustomersListingPageItem) => {
     console.log("Excluir item:", item.id);
     // TODO: Implementar exclusão
+    router.push(`/customers/${item.id}/edit`);
   };
 
   const handleResume = (item: CustomersListingPageItem) => {

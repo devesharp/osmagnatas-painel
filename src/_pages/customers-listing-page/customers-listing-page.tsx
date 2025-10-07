@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 export function CustomersListingPage() {
   const ctrl = CustomersListingPageCtrl();
   const router = useRouter();
-  
+
   return (
     <div className="w-full p-5">
       {/* Header */}
@@ -23,7 +23,7 @@ export function CustomersListingPage() {
               <h1 className="text-2xl font-semibold">Clientes</h1>
             </div>
             <div className="flex items-center gap-3">
-              <Button onClick={() => router.push('/customers/create')}>
+              <Button onClick={() => router.push("/customers/create")}>
                 <Plus className="h-4 w-4" />
                 Novo
               </Button>
@@ -59,24 +59,25 @@ export function CustomersListingPage() {
           </div>
         </div>
 
-{ctrl.viewList.isErrorOnLoad && <ErrorPage />}
+        {ctrl.viewList.isErrorOnLoad && <ErrorPage />}
 
         {!ctrl.viewList.isErrorOnLoad && (
-        <div ref={ctrl.containerRef}>
-          <TableListing
-            selecteds={ctrl.selectedItems}
-            onSelected={ctrl.setSelectedItems}
-            getRowKey={(item) => item.id}
-            items={ctrl.viewList.resources}
-            columns={ctrl.columns}
-            sortState={ctrl.viewList.filters.sort}
-            onSortChange={ctrl.viewList.setSort}
-            striped={true}
-            loading={ctrl.viewList.isLoading || ctrl.viewList.isSearching}
-            className="[&_table]:bg-transparent [&_th]:bg-gray-750 [&_t [&_th]:text-gray-400 [&_t"
-            containerClassName="overflow-x-auto"
-          />
-        </div>)}
+          <div ref={ctrl.containerRef}>
+            <TableListing
+              selecteds={ctrl.selectedItems}
+              onSelected={ctrl.setSelectedItems}
+              getRowKey={(item) => item.id}
+              items={ctrl.viewList.resources}
+              columns={ctrl.columns}
+              sortState={ctrl.viewList.filters.sort}
+              onSortChange={ctrl.viewList.setSort}
+              striped={true}
+              loading={ctrl.viewList.isLoading || ctrl.viewList.isSearching}
+              className="[&_table]:bg-transparent [&_th]:bg-gray-750 [&_t [&_th]:text-gray-400 [&_t"
+              containerClassName="overflow-x-auto"
+            />
+          </div>
+        )}
 
         <div className="pt-5">
           <Pagination
@@ -89,4 +90,4 @@ export function CustomersListingPage() {
       </div>
     </div>
   );
-} 
+}
