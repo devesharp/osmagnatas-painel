@@ -11,6 +11,8 @@ export interface FinancialData {
     date: string;
     entrada: number;
     saida: number;
+    inadimplenciaCriada: number;
+    inadimplenciaPaga: number;
   }>;
 
   // Métricas adicionais

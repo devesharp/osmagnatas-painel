@@ -247,8 +247,8 @@ export function ResumePage() {
             <CardTitle className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
               {ctrl.dateRange
-                ? `Entradas e Saídas - ${ctrl.dateRange.from?.toLocaleDateString('pt-BR')} a ${ctrl.dateRange.to?.toLocaleDateString('pt-BR')}`
-                : 'Entradas e Saídas - Últimos 15 Dias'
+                ? `Movimentação Financeira - ${ctrl.dateRange.from?.toLocaleDateString('pt-BR')} a ${ctrl.dateRange.to?.toLocaleDateString('pt-BR')}`
+                : 'Movimentação Financeira - Últimos 15 Dias'
               }
             </CardTitle>
           </CardHeader>
@@ -267,13 +267,28 @@ export function ResumePage() {
                     fontSize={12}
                   />
                   <Tooltip
-                    formatter={(value: number, name: string) => [
-                      formatCurrency(value),
-                      name === 'entrada' ? 'Entrada' : 'Saída'
-                    ]}
+                    formatter={(value: number, name: string) => {
+                      const labels: Record<string, string> = {
+                        'entrada': 'Entrada',
+                        'saida': 'Saída',
+                        'inadimplenciaCriada': 'Inadimplência Criada',
+                        'inadimplenciaPaga': 'Inadimplência Paga'
+                      };
+                      return [formatCurrency(value), labels[name] || name];
+                    }}
                     labelFormatter={(label) => `Data: ${formatDate(label)}`}
                   />
-                  <Legend />
+                  <Legend 
+                    formatter={(value: string) => {
+                      const labels: Record<string, string> = {
+                        'entrada': 'Entrada',
+                        'saida': 'Saída',
+                        'inadimplenciaCriada': 'Inadimplência Criada',
+                        'inadimplenciaPaga': 'Inadimplência Paga'
+                      };
+                      return labels[value] || value;
+                    }}
+                  />
                   <Bar
                     dataKey="entrada"
                     fill="#10b981"
@@ -284,6 +299,18 @@ export function ResumePage() {
                     dataKey="saida"
                     fill="#ef4444"
                     name="saida"
+                    radius={[2, 2, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="inadimplenciaCriada"
+                    fill="#f59e0b"
+                    name="inadimplenciaCriada"
+                    radius={[2, 2, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="inadimplenciaPaga"
+                    fill="#8b5cf6"
+                    name="inadimplenciaPaga"
                     radius={[2, 2, 0, 0]}
                   />
                 </BarChart>
