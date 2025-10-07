@@ -77,4 +77,24 @@ export const inadimplenciaApi = {
   delete: async (id: number): Promise<void> => {
     await api.delete(`/inadimplencia/${id}`);
   },
+
+  // Registrar pagamento de inadimplência
+  payment: async (
+    id: number,
+    data: { amount: number; moeda?: string; notes?: string }
+  ): Promise<{
+    transaction: any;
+    inadimplencia: Inadimplencia;
+    message: string;
+  }> => {
+    const response = await api.post<
+      APIResponse<{
+        transaction: any;
+        inadimplencia: Inadimplencia;
+        message: string;
+      }>
+    >(`/inadimplencia/${id}/payment`, data);
+
+    return response.data.data;
+  },
 };

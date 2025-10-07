@@ -2,6 +2,7 @@ export interface Inadimplencia {
   id: number
   customer_id: number
   amount: number
+  amount_payed: number
   payed: boolean
   created_by: number
   createdAt: Date
@@ -28,6 +29,7 @@ export interface CreateInadimplenciaRequest {
 export interface UpdateInadimplenciaRequest {
   customer_id?: number
   amount?: number
+  amount_payed?: number
   payed?: boolean
 }
 

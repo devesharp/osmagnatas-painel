@@ -137,6 +137,13 @@ export async function GET(
             email: true,
             user_name: true
           }
+        },
+        inadimplencia: {
+          select: {
+            id: true,
+            amount: true,
+            amount_payed: true
+          }
         }
       }
     })
@@ -255,11 +262,49 @@ export async function PUT(
       }
     }
 
+    // Verificar se inadimplência existe (se foi fornecida)
+    if (body.inadimplencia_id !== undefined) {
+      if (body.inadimplencia_id !== null) {
+        const inadimplencia = await prisma.inadimplencia.findUnique({
+          where: { id: body.inadimplencia_id }
+        })
+
+        if (!inadimplencia) {
+          return NextResponse.json(
+            {
+              success: false,
+              data: {
+                error: 'Inadimplência não encontrada',
+                message: 'A inadimplência especificada não existe'
+              }
+            },
+            { status: 404 }
+          )
+        }
+
+        // Verificar se a inadimplência pertence ao mesmo customer
+        const customerId = body.customer_id || existingTransaction.customer_id
+        if (inadimplencia.customer_id !== customerId) {
+          return NextResponse.json(
+            {
+              success: false,
+              data: {
+                error: 'Inadimplência inválida',
+                message: 'A inadimplência não pertence ao customer especificado'
+              }
+            },
+            { status: 400 }
+          )
+        }
+      }
+    }
+
     // Atualizar transaction
     const transaction = await prisma.transaction.update({
       where: { id },
       data: {
         ...(body.customer_id && { customer_id: body.customer_id }),
+        ...(body.inadimplencia_id !== undefined && { inadimplencia_id: body.inadimplencia_id }),
         ...(body.status && { status: body.status }),
         ...(body.payment_type && { payment_type: body.payment_type }),
         ...(body.notes !== undefined && { notes: body.notes }),
@@ -281,6 +326,13 @@ export async function PUT(
             id: true,
             email: true,
             user_name: true
+          }
+        },
+        inadimplencia: {
+          select: {
+            id: true,
+            amount: true,
+            amount_payed: true
           }
         }
       }

@@ -7,6 +7,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { InadimplenciaListingPageCtrl } from "./inadimplencia-listing-page.ctrl";
 import { InadimplenciaListingPageFilters } from "./components/inadimplencia-listing-page-filters/inadimplencia-listing-page-filters";
 import { ErrorPage } from "@/components/error-page";
+import { InadimplenciaPaymentModal } from "./inadimplencia-payment-modal";
 
 export function InadimplenciaListingPage() {
   const ctrl = InadimplenciaListingPageCtrl();
@@ -72,7 +73,7 @@ export function InadimplenciaListingPage() {
             withSelect
             selecteds={ctrl.selectedItems}
             onSelected={ctrl.setSelectedItems}
-            getRowKey={(item) => item.id}
+            getRowKey={(item) => String(item.id)}
             items={ctrl.viewList.resources}
             columns={ctrl.columns}
             sortState={ctrl.viewList.filters.sort}
@@ -81,7 +82,6 @@ export function InadimplenciaListingPage() {
             loading={ctrl.viewList.isLoading || ctrl.viewList.isSearching}
             className="[&_table]:bg-transparent [&_th]:bg-gray-750 [&_t [&_th]:text-gray-400 [&_t"
             containerClassName="overflow-x-auto"
-            actions={ctrl.actions}
           />
         </div>)}
 
@@ -94,6 +94,14 @@ export function InadimplenciaListingPage() {
           />
         </div>
       </div>
+
+      {/* Modal de Pagamento */}
+      <InadimplenciaPaymentModal
+        open={ctrl.paymentModal.open}
+        onOpenChange={ctrl.handleClosePaymentModal}
+        inadimplencia={ctrl.paymentModal.inadimplencia}
+        onConfirm={ctrl.handleConfirmPayment}
+      />
     </div>
   );
 } 

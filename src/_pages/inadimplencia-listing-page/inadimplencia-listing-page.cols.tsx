@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { InadimplenciaListingPageItem } from "./inadimplencia-listing-page.types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { transactionsApi } from "@/api/transactions.request";
-import { CreateTransactionRequest } from "@/types/transaction";
 
 // Componente para coluna de ações
 interface ActionsColProps {
@@ -18,22 +16,19 @@ interface ActionsColProps {
 }
 
 function ActionsCol({ item, onEdit, onDelete, onPay }: ActionsColProps) {
-  const handlePay = async () => {
-    if (onPay && item.payed === false) {
-      await onPay(item);
-    }
-  };
+  const remainingAmount = item.amount - item.amount_payed;
+  const isPaid = item.payed || remainingAmount <= 0;
 
   return (
     <div className="flex items-center gap-1">
       <Button
         size="sm"
-        variant={item.payed ? "secondary" : "default"}
-        disabled={item.payed}
-        onClick={handlePay}
+        variant={isPaid ? "secondary" : "default"}
+        disabled={isPaid}
+        onClick={() => onPay?.(item)}
         className="h-8 px-2 text-xs"
       >
-        {item.payed ? "Pago" : "Pagar"}
+        {isPaid ? "Pago" : "Pagar"}
       </Button>
       <Button
         size="sm"
@@ -58,10 +53,27 @@ function ActionsCol({ item, onEdit, onDelete, onPay }: ActionsColProps) {
 
 // Componente para coluna de valor
 function AmountCol({ item }: { item: InadimplenciaListingPageItem }) {
+  const remainingAmount = item.amount - item.amount_payed;
+  const isPaid = item.payed || remainingAmount <= 0;
+
   return (
-    <span className="font-semibold text-green-600">
-      ${item.amount.toFixed(2)}
-    </span>
+    <div className="flex flex-col">
+      <span className="font-semibold text-green-600">
+        ${item.amount.toFixed(2)}
+      </span>
+      {item.amount_payed > 0 && (
+        <div className="text-xs">
+          <span className="text-muted-foreground">Pago: </span>
+          <span className="text-green-600">${item.amount_payed.toFixed(2)}</span>
+        </div>
+      )}
+      {!isPaid && item.amount_payed > 0 && (
+        <div className="text-xs">
+          <span className="text-muted-foreground">Falta: </span>
+          <span className="text-red-600">${remainingAmount.toFixed(2)}</span>
+        </div>
+      )}
+    </div>
   );
 }
 

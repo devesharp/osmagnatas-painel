@@ -6,7 +6,6 @@ import { IInadimplenciaListingPageFilters } from "./components/inadimplencia-lis
 import { useInadimplenciaListingPageColumns } from "./inadimplencia-listing-page.cols";
 import { InadimplenciaListingPageItem } from "./inadimplencia-listing-page.types";
 import { inadimplenciaApi } from "@/api/inadimplencia.request";
-import { transactionsApi } from "@/api/transactions.request";
 import {
   IResolve,
   IResponseResults,
@@ -24,7 +23,14 @@ const inadimplenciaListingPageApi = {
 
 export function InadimplenciaListingPageCtrl() {
   const [openFilterModal, setOpenFilterModal] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
+  const [paymentModal, setPaymentModal] = useState<{
+    open: boolean;
+    inadimplencia: InadimplenciaListingPageItem | null;
+  }>({
+    open: false,
+    inadimplencia: null,
+  });
   
   const viewList = useViewList<InadimplenciaListingPageItem, IInadimplenciaListingPageFilters>({
     resolveResources: inadimplenciaListingPageApi.search as IResolve<
@@ -60,32 +66,36 @@ export function InadimplenciaListingPageCtrl() {
     }
   };
 
-  const handlePay = async (item: InadimplenciaListingPageItem) => {
-    console.log("Pagar inadimplência:", item.id);
-    viewList.setStatusInfo({ isLoading: true });
+  const handlePay = (item: InadimplenciaListingPageItem) => {
+    setPaymentModal({
+      open: true,
+      inadimplencia: item,
+    });
+  };
+
+  const handleConfirmPayment = async (amount: number, notes: string) => {
+    if (!paymentModal.inadimplencia) return;
+
     try {
-      // 1. Primeiro marcar a inadimplência como paga
-      await inadimplenciaApi.update(item.id, { payed: true });
+      await inadimplenciaApi.payment(paymentModal.inadimplencia.id, {
+        amount,
+        notes,
+        moeda: "USD",
+      });
 
-      // 2. Criar transação de pagamento
-      const transactionData = {
-        customer_id: item.customer_id,
-        amount: item.amount,
-        status: 'PAYED' as const,
-        payment_type: 'IN' as const,
-        payed_at: new Date(),
-        created_by: 1, // TODO: Pegar do contexto de usuário
-      };
-
-      await transactionsApi.create(transactionData);
-
-      viewList.setStatusInfo({ isLoading: false });
-      // 3. Recarregar a lista (a inadimplência paga não aparecerá mais)
-      viewList.reloadPage()
+      // Recarregar a lista
+      viewList.reloadPage();
     } catch (error) {
-      viewList.setStatusInfo({ isLoading: false });
       console.error("Erro ao processar pagamento:", error);
+      throw error;
     }
+  };
+
+  const handleClosePaymentModal = () => {
+    setPaymentModal({
+      open: false,
+      inadimplencia: null,
+    });
   };
 
   // Configuração das colunas
@@ -132,5 +142,8 @@ export function InadimplenciaListingPageCtrl() {
     selectedItems,
     setSelectedItems,
     actions,
+    paymentModal,
+    handleConfirmPayment,
+    handleClosePaymentModal,
   };
 } 

@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
     const amount_max = searchParams.get('amount_max') ? parseFloat(searchParams.get('amount_max')!) : undefined
 
     // Construir filtros
-    const where: Record<string, any> = {}
+    const where: Record<string, unknown> = {}
 
     if (search) {
       where.OR = [
@@ -149,13 +149,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (amount_min !== undefined || amount_max !== undefined) {
-      where.amount = {}
+      const amountFilter: Record<string, number> = {}
       if (amount_min !== undefined) {
-        where.amount.gte = amount_min
+        amountFilter.gte = amount_min
       }
       if (amount_max !== undefined) {
-        where.amount.lte = amount_max
+        amountFilter.lte = amount_max
       }
+      where.amount = amountFilter
     }
 
     // Buscar transactions
@@ -180,6 +181,13 @@ export async function GET(request: NextRequest) {
               id: true,
               email: true,
               user_name: true
+            }
+          },
+          inadimplencia: {
+            select: {
+              id: true,
+              amount: true,
+              amount_payed: true
             }
           }
         }
@@ -258,10 +266,45 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Verificar se inadimplência existe (se foi fornecida)
+    if (body.inadimplencia_id) {
+      const inadimplencia = await prisma.inadimplencia.findUnique({
+        where: { id: Number(body.inadimplencia_id) }
+      })
+
+      if (!inadimplencia) {
+        return NextResponse.json(
+          {
+            success: false,
+            data: {
+              error: 'Inadimplência não encontrada',
+              message: 'A inadimplência especificada não existe'
+            }
+          },
+          { status: 404 }
+        )
+      }
+
+      // Verificar se a inadimplência pertence ao mesmo customer
+      if (inadimplencia.customer_id !== Number(body.customer_id)) {
+        return NextResponse.json(
+          {
+            success: false,
+            data: {
+              error: 'Inadimplência inválida',
+              message: 'A inadimplência não pertence ao customer especificado'
+            }
+          },
+          { status: 400 }
+        )
+      }
+    }
+
     // Criar transaction
     const transaction = await prisma.transaction.create({
       data: {
         customer_id: Number(body.customer_id),
+        inadimplencia_id: body.inadimplencia_id ? Number(body.inadimplencia_id) : null,
         status: body.status || 'PENDING',
         payment_type: body.payment_type || 'OUT',
         notes: body.notes,
@@ -284,6 +327,13 @@ export async function POST(request: NextRequest) {
             id: true,
             email: true,
             user_name: true
+          }
+        },
+        inadimplencia: {
+          select: {
+            id: true,
+            amount: true,
+            amount_payed: true
           }
         }
       }

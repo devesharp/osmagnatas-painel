@@ -4,6 +4,7 @@ export type PaymentType = 'IN' | 'OUT'
 export interface Transaction {
   id: number
   customer_id: number
+  inadimplencia_id?: number | null
   status: TransactionStatus
   payment_type: PaymentType
   notes?: string | null
@@ -24,10 +25,16 @@ export interface Transaction {
     email: string
     user_name?: string | null
   }
+  inadimplencia?: {
+    id: number
+    amount: number
+    amount_payed: number
+  } | null
 }
 
 export interface CreateTransactionRequest {
   customer_id: number
+  inadimplencia_id?: number
   status?: TransactionStatus
   payment_type?: PaymentType
   notes?: string
@@ -40,6 +47,7 @@ export interface CreateTransactionRequest {
 
 export interface UpdateTransactionRequest {
   customer_id?: number
+  inadimplencia_id?: number | null
   status?: TransactionStatus
   payment_type?: PaymentType
   notes?: string

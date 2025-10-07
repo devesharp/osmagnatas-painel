@@ -107,21 +107,23 @@ enum LogType {
 }
 
 model Transaction {
-  id           Int               @id @default(autoincrement())
-  customer_id  Int
-  status       TransactionStatus @default(PENDING)
-  payment_type PaymentType       @default(OUT)
-  notes        String?
-  amount       Float
-  moeda        String             @default("USD")
-  expired_at   DateTime?
-  payed_at     DateTime?
-  created_by   Int
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+  id                Int               @id @default(autoincrement())
+  customer_id       Int
+  inadimplencia_id  Int?
+  status            TransactionStatus @default(PENDING)
+  payment_type      PaymentType       @default(OUT)
+  notes             String?
+  amount            Float
+  moeda             String             @default("USD")
+  expired_at        DateTime?
+  payed_at          DateTime?
+  created_by        Int
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
-  customer     Customer           @relation(fields: [customer_id], references: [id])
-  creator      User               @relation(fields: [created_by], references: [id])
+  customer          Customer           @relation(fields: [customer_id], references: [id])
+  creator           User               @relation(fields: [created_by], references: [id])
+  inadimplencia     Inadimplencia?     @relation(fields: [inadimplencia_id], references: [id])
 
   @@map("transactions")
 }
@@ -131,13 +133,15 @@ model Inadimplencia {
   id           Int      @id @default(autoincrement())
   customer_id  Int
   amount       Float
+  amount_payed Float    @default(0)
   payed        Boolean  @default(false)
   created_by   Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  customer Customer @relation(fields: [customer_id], references: [id])
-  creator  User     @relation(fields: [created_by], references: [id])
+  customer     Customer      @relation(fields: [customer_id], references: [id])
+  creator      User          @relation(fields: [created_by], references: [id])
+  transactions Transaction[]
 
   @@map("inadimplencia")
 }

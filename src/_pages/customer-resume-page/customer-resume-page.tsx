@@ -407,13 +407,28 @@ export function CustomerResumePage() {
                         fontSize={12}
                       />
                       <Tooltip
-                        formatter={(value: number, name: string) => [
-                          formatCurrency(value),
-                          name === 'entrada' ? 'Entrada' : 'Saída'
-                        ]}
+                        formatter={(value: number, name: string) => {
+                          const labels = {
+                            'entrada': 'Entrada',
+                            'saida': 'Saída', 
+                            'inadimplenciaCriada': 'Inadimplência Criada',
+                            'inadimplenciaPaga': 'Inadimplência Paga'
+                          };
+                          return [formatCurrency(value), labels[name as keyof typeof labels]];
+                        }}
                         labelFormatter={(label) => `Data: ${formatDateChart(label)}`}
                       />
-                      <Legend />
+                      <Legend 
+                        formatter={(value) => {
+                          const labels = {
+                            'entrada': 'Entrada',
+                            'saida': 'Saída',
+                            'inadimplenciaCriada': 'Inadimplência Criada', 
+                            'inadimplenciaPaga': 'Inadimplência Paga'
+                          };
+                          return labels[value as keyof typeof labels];
+                        }}
+                      />
                       <Bar
                         dataKey="entrada"
                         fill="#10b981"
@@ -424,6 +439,18 @@ export function CustomerResumePage() {
                         dataKey="saida"
                         fill="#ef4444"
                         name="saida"
+                        radius={[2, 2, 0, 0]}
+                      />
+                      <Bar
+                        dataKey="inadimplenciaCriada"
+                        fill="#f59e0b"
+                        name="inadimplenciaCriada"
+                        radius={[2, 2, 0, 0]}
+                      />
+                      <Bar
+                        dataKey="inadimplenciaPaga"
+                        fill="#6366f1"
+                        name="inadimplenciaPaga"
                         radius={[2, 2, 0, 0]}
                       />
                     </BarChart>

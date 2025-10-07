@@ -38,6 +38,8 @@ export interface ICustomerFinancialData {
     date: string;
     entrada: number;
     saida: number;
+    inadimplenciaCriada: number;
+    inadimplenciaPaga: number;
   }>;
   transactionsTotal: number;
   transactionsPendentes: number;
