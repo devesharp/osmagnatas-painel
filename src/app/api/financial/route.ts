@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { FinancialData, APIResponse } from '@/types/financial'
 import { verifyToken, getUserById } from '@/lib/auth'
+import { parse } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 // Função auxiliar para extrair token do header Authorization
 function getTokenFromHeader(request: NextRequest): string | null {
@@ -115,8 +117,13 @@ export async function GET(request: NextRequest) {
 
     if (startDateParam && endDateParam) {
       // Se as datas foram fornecidas, usar elas
-      startDate = new Date(startDateParam)
-      endDate = new Date(endDateParam)
+      startDate = parse(startDateParam, 'yyyy-MM-dd', new Date(), {
+        locale: ptBR
+        })
+      startDate.setHours(0, 0, 0, 0)
+      endDate = parse(endDateParam, 'yyyy-MM-dd', new Date(), {
+        locale: ptBR
+      })
       // Ajustar o final do dia para incluir todas as transações do dia
       endDate.setHours(23, 59, 59, 999)
     } else {
@@ -124,6 +131,8 @@ export async function GET(request: NextRequest) {
       endDate = new Date()
       startDate = new Date()
       startDate.setDate(endDate.getDate() - 15)
+      startDate.setHours(0, 0, 0, 0)
+      endDate.setHours(23, 59, 59, 999)
     }
 
     // Buscar transactions dos últimos 15 dias
@@ -175,6 +184,9 @@ export async function GET(request: NextRequest) {
     // Calcular métricas do período
     let entradaMes = 0
     let saidaMes = 0
+    let totalGramsPeriodo = 0
+    const processedInadimplencias = new Set<number>() // Para evitar contar gramas duplicadas
+    
     const grafico15Dias: Array<{
       date: string;
       entrada: number;
@@ -221,6 +233,20 @@ export async function GET(request: NextRequest) {
           } else if (transaction.payment_type === 'OUT' && transaction.status === 'PAYED') {
             saidaMes += transaction.amount
             dailyData[dateKey].saida += transaction.amount
+          }
+        }
+        
+        // Calcular gramas: somar apenas uma vez por inadimplencia_id
+        if (transaction.grams && transaction.status === 'PAYED') {
+          if (transaction.inadimplencia_id) {
+            // Se tem inadimplencia_id, só soma se ainda não foi processada
+            if (!processedInadimplencias.has(transaction.inadimplencia_id)) {
+              totalGramsPeriodo += transaction.grams
+              processedInadimplencias.add(transaction.inadimplencia_id)
+            }
+          } else {
+            // Se não tem inadimplencia_id, soma normalmente
+            totalGramsPeriodo += transaction.grams
           }
         }
       }
@@ -324,7 +350,8 @@ export async function GET(request: NextRequest) {
       clientesInadimplentes,
       transactionsTotal: totalTransactions,
       transactionsPendentes,
-      transactionsPagas
+      transactionsPagas,
+      totalGramsPeriodo
     }
 
     const response: APIResponse<FinancialData> = {

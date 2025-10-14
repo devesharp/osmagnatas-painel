@@ -21,6 +21,7 @@ export interface FinancialData {
   transactionsTotal: number;
   transactionsPendentes: number;
   transactionsPagas: number;
+  totalGramsPeriodo: number;
 }
 
 export interface APIResponse<T> {

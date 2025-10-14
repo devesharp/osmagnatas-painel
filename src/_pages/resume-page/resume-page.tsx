@@ -26,7 +26,8 @@ import {
   CreditCard,
   AlertTriangle,
   Wallet,
-  Calendar
+  Calendar,
+  Weight
 } from "lucide-react";
 
 // Funções auxiliares
@@ -42,6 +43,13 @@ const formatDate = (dateString: string) => {
     day: '2-digit',
     month: '2-digit',
   });
+};
+
+const formatGrams = (value: number) => {
+  return new Intl.NumberFormat('pt-BR', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  }).format(value);
 };
 
 export function ResumePage() {
@@ -181,7 +189,7 @@ export function ResumePage() {
 
       {/* Cards de Período Selecionado */}
       {ctrl.dateRange && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Entrada no Período */}
           <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-l-4 border-l-green-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -234,6 +242,22 @@ export function ResumePage() {
               </div>
               <p className="text-xs text-muted-foreground">
                 Entradas - Saídas do período
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Total de Gramas no Período */}
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-l-4 border-l-purple-500">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Gramas no Período</CardTitle>
+              <Weight className="h-4 w-4 text-purple-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-600">
+                {formatGrams(ctrl.financial?.totalGramsPeriodo || 0)}g
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Total de gramas vendidas
               </p>
             </CardContent>
           </Card>
