@@ -126,14 +126,15 @@ export async function GET(request: NextRequest) {
     ])
 
     const response: APIResponseSearch<Log> = {
-      success: true,
-      data: {
-        results: logs,
-        count: total,
-      }
+      results: logs,
+      count: logs.length,
+      total
     }
 
-    return NextResponse.json(response)
+    return NextResponse.json({
+      success: true,
+      data: response
+    })
 
   } catch (error) {
     console.error('Erro ao buscar logs:', error)

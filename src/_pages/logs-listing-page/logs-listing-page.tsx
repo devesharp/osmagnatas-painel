@@ -1,9 +1,12 @@
 "use client";
 
+import { Filter } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { TableListing } from "@/components/table-listing/table-listing";
 import { Pagination } from "@/components/ui/pagination";
 import { LogsListingPageCtrl } from "./logs-listing-page.ctrl";
 import { ErrorPage } from "@/components/error-page";
+import { LogsListingPageFilters } from "./components/logs-listing-page-filters/logs-listing-page-filters";
 
 export function LogsListingPage() {
   const ctrl = LogsListingPageCtrl();
@@ -20,11 +23,34 @@ export function LogsListingPage() {
                 Histórico de todas as ações realizadas no sistema
               </p>
             </div>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" onClick={() => ctrl.setOpenFilterModal(true)}>
+                <Filter className="h-4 w-4 mr-2" />
+                Filtros
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="">
+        <LogsListingPageFilters
+          filters={ctrl.viewList.filters}
+          isVisibleMobile={ctrl.openFilterModal}
+          onRequestClose={() => ctrl.setOpenFilterModal(false)}
+          onFiltersApply={ctrl.viewList.setFilters}
+        />
+
+        <div className="fixed bottom-0 left-0 right-0 p-3 w-full z-10 md:hidden">
+          <Button
+            onClick={() => ctrl.setOpenFilterModal(true)}
+            className="w-full"
+            size="lg"
+          >
+            <Filter className="h-4 w-4" />
+            Filtros
+          </Button>
+        </div>
 
         <div className="flex items-center gap-2">
           <div className="text-muted-foreground text-sm font-medium">
@@ -39,7 +65,7 @@ export function LogsListingPage() {
         {!ctrl.viewList.isErrorOnLoad && (
         <div ref={ctrl.containerRef}>
           <TableListing
-            getRowKey={(item) => item.id}
+            getRowKey={(item) => String(item.id)}
             items={ctrl.viewList.resources}
             columns={ctrl.columns}
             sortState={ctrl.viewList.filters.sort}

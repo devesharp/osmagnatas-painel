@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ColumnConfig } from "@/components/table-listing/table-listing.types";
 import { useLogsListingPageColumns } from "./logs-listing-page.cols";
 import {
@@ -11,11 +11,12 @@ import {
 
 import { LogsListingPageItem } from "./logs-listing-page.types";
 import { logsApi } from "@/api/logs.request";
-import { LogFilters } from "@/types/log";
+import { ILogsListingPageFilters } from "./components/logs-listing-page-filters/logs-listing-page-filters.types";
 
 export function LogsListingPageCtrl() {
+  const [openFilterModal, setOpenFilterModal] = useState(false);
   
-  const viewList = useViewList<LogsListingPageItem, LogFilters>({
+  const viewList = useViewList<LogsListingPageItem, ILogsListingPageFilters>({
     resolveResources: logsApi.search as IResolve<
       IResponseResults<LogsListingPageItem>
     >,
@@ -44,5 +45,7 @@ export function LogsListingPageCtrl() {
     viewList,
     columns,
     actions,
+    openFilterModal,
+    setOpenFilterModal,
   };
 } 
