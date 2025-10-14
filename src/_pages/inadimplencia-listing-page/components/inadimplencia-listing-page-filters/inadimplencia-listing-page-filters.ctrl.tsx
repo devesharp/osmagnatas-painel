@@ -1,12 +1,10 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import {
-  filterSchema,
   IInadimplenciaListingPageFilters,
   InadimplenciaListingPageFiltersProps,
 } from "./inadimplencia-listing-page-filters.types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useViewForm } from "@devesharp/react-hooks-v2";
 
 /**
  * Hook controller para o componente de filtros de Inadimplencia Listing Page
@@ -16,37 +14,20 @@ export function useInadimplenciaListingPageFiltersCtrl(props: InadimplenciaListi
   const { onFiltersApply, filters } = props;
   const isMobile = useIsMobile();
 
-  // Configuração do formulário com react-hook-form
-  const methods = useForm<IInadimplenciaListingPageFilters>({
-    resolver: zodResolver(filterSchema),
-    defaultValues: filters,
-  });
+  const viewForm = useViewForm({});
 
   useEffect(() => {
-    methods.reset(filters);
-  }, [filters, methods]);
-
-  // Desestruturação dos métodos do formulário
-  const {
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { isSubmitting },
-  } = methods;
+    viewForm.setResource(filters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
   /**
    * Função chamada ao submeter o formulário
    * Processa os dados e chama o callback de aplicação de filtros
    */
-  const onSubmit = async (data: IInadimplenciaListingPageFilters) => {
-    try {
-      if (!isMobile) {
-        console.log("Dados do formulário:", data);
-        onFiltersApply(data);
-      }
-    } catch (error) {
-      console.error("Erro ao aplicar filtros:", error);
-    }
+  const onSubmit = async () => {
+    props.onRequestClose?.();
+    onFiltersApply(viewForm.resource);
   };
 
   /**
@@ -54,16 +35,13 @@ export function useInadimplenciaListingPageFiltersCtrl(props: InadimplenciaListi
    * Limpa todos os valores e chama o callback de reset
    */
   const resetForm = () => {
-    reset({});
+    viewForm.setResource({});
+    onFiltersApply({});
   };
 
   return {
-    // Métodos do formulário
-    methods,
-    handleSubmit,
-    setValue,
-    isSubmitting,
-
+    viewForm,
+    
     // Funções de controle
     onSubmit,
     resetForm,
