@@ -29,6 +29,8 @@ export const inadimplenciaApi = {
     if (data.amount_max) params.append('amount_max', data.amount_max.toString());
     if (data.grams_min) params.append('grams_min', data.grams_min.toString());
     if (data.grams_max) params.append('grams_max', data.grams_max.toString());
+    if (data.created_at_start) params.append('created_at_start', data.created_at_start);
+    if (data.created_at_end) params.append('created_at_end', data.created_at_end);
 
     // Adicionar paginação
     if (searchData.query?.limit) params.append('limit', searchData.query.limit.toString());

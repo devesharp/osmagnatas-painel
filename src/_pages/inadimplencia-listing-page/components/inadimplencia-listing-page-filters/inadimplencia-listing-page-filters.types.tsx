@@ -30,6 +30,12 @@ export const filterSchema = z.object({
   /** Gramas máximo */
   grams_max: z.string().optional().transform((val) => val ? parseInt(val) : undefined),
 
+  /** Data de criação inicial */
+  created_at_start: z.string().optional(),
+
+  /** Data de criação final */
+  created_at_end: z.string().optional(),
+
   /** Limite de resultados */
   limit: z.string().optional().transform((val) => val ? parseInt(val) : undefined),
 

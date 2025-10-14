@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { InputDate } from "@/components/ui/input-date";
 import { useInadimplenciaListingPageFiltersCtrl } from "./inadimplencia-listing-page-filters.ctrl";
 import { InadimplenciaListingPageFiltersProps } from "./inadimplencia-listing-page-filters.types";
 import { FiltersContainer } from "@/components/filters-container/filters-container";
@@ -79,6 +80,19 @@ export function InadimplenciaListingPageFilters(props: InadimplenciaListingPageF
               placeholder="999999"
               type="number"
               min="0"
+            />
+
+            {/* Filtros de Data de Criação */}
+            <InputDate
+              name="created_at_start"
+              title="Criação - De"
+              placeholder="dd/MM/yyyy"
+            />
+
+            <InputDate
+              name="created_at_end"
+              title="Criação - Até"
+              placeholder="dd/MM/yyyy"
             />
 
             {/* Botões de ação */}

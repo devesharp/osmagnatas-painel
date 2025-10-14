@@ -114,6 +114,22 @@ export async function GET(request: NextRequest) {
     const customer_id = searchParams.get('customer_id') ? parseInt(searchParams.get('customer_id')!) : undefined
     const amount_min = searchParams.get('amount_min') ? parseFloat(searchParams.get('amount_min')!) : undefined
     const amount_max = searchParams.get('amount_max') ? parseFloat(searchParams.get('amount_max')!) : undefined
+    const grams_min = searchParams.get('grams_min') ? parseFloat(searchParams.get('grams_min')!) : undefined
+    const grams_max = searchParams.get('grams_max') ? parseFloat(searchParams.get('grams_max')!) : undefined
+    
+    // Parâmetros de data - Função auxiliar para converter dd/MM/yyyy para Date
+    const parseDate = (dateString: string | null): Date | undefined => {
+      if (!dateString) return undefined
+      // Aceita tanto formato dd/MM/yyyy quanto yyyy-MM-dd
+      if (dateString.includes('/')) {
+        const [day, month, year] = dateString.split('/')
+        return new Date(`${year}-${month}-${day}`)
+      }
+      return new Date(dateString)
+    }
+
+    const created_at_start = parseDate(searchParams.get('created_at_start'))
+    const created_at_end = parseDate(searchParams.get('created_at_end'))
 
     // Construir filtros
     const where: Record<string, any> = {}
@@ -122,8 +138,8 @@ export async function GET(request: NextRequest) {
       where.OR = [
         { customer: {
           OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } }
+            { name: { contains: search } },
+            { email: { contains: search } }
           ]
         }}
       ]
@@ -145,6 +161,30 @@ export async function GET(request: NextRequest) {
       if (amount_max !== undefined) {
         where.amount.lte = amount_max
       }
+    }
+
+    if (grams_min !== undefined || grams_max !== undefined) {
+      where.grams = {}
+      if (grams_min !== undefined) {
+        where.grams.gte = grams_min
+      }
+      if (grams_max !== undefined) {
+        where.grams.lte = grams_max
+      }
+    }
+
+    // Filtros de data de criação
+    if (created_at_start || created_at_end) {
+      const createdAtFilter: Record<string, Date> = {}
+      if (created_at_start) {
+        createdAtFilter.gte = created_at_start
+      }
+      if (created_at_end) {
+        const endDate = new Date(created_at_end)
+        endDate.setHours(23, 59, 59, 999)
+        createdAtFilter.lte = endDate
+      }
+      where.createdAt = createdAtFilter
     }
 
     // Buscar inadimplências

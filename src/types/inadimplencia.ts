@@ -45,6 +45,8 @@ export interface InadimplenciaSearchFilters {
   amount_max?: number
   grams_min?: number
   grams_max?: number
+  created_at_start?: string
+  created_at_end?: string
   limit?: number
   offset?: number
 }
