@@ -55,6 +55,8 @@ export interface CustomersSearchFilters {
   person_type?: PersonType
   name?: string
   email?: string
+  created_at_start?: string
+  created_at_end?: string
   limit?: number
   offset?: number
 }

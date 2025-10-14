@@ -16,6 +16,12 @@ export const filterSchema = z.object({
 
   /** Email do cliente */
   email: z.string().optional(),
+
+  /** Data de criação inicial */
+  created_at_start: z.string().optional(),
+
+  /** Data de criação final */
+  created_at_end: z.string().optional(),
 });
 
 /**

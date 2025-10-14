@@ -115,28 +115,57 @@ export async function GET(request: NextRequest) {
     const name = searchParams.get('name') || undefined
     const email = searchParams.get('email') || undefined
 
+    // Função auxiliar para converter string de data dd/MM/yyyy ou yyyy-MM-dd para Date
+    const parseDate = (dateString: string | null): Date | undefined => {
+      if (!dateString) return undefined
+      // Aceita tanto formato dd/MM/yyyy quanto yyyy-MM-dd
+      if (dateString.includes('/')) {
+        const [day, month, year] = dateString.split('/')
+        return new Date(`${year}-${month}-${day}`)
+      }
+      return new Date(dateString)
+    }
+
+    // Extrair parâmetros de data
+    const created_at_start = parseDate(searchParams.get('created_at_start'))
+    const created_at_end = parseDate(searchParams.get('created_at_end'))
+
     // Construir filtros
     const where: Record<string, any> = {}
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } },
-        { cpf: { contains: search, mode: 'insensitive' } },
-        { cnpj: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search } },
+        { email: { contains: search } },
+        { cpf: { contains: search } },
+        { cnpj: { contains: search } },
       ]
     }
 
-    if (person_type) {
+    if (person_type && person_type !== 'all') {
       where.person_type = person_type
     }
 
     if (name) {
-      where.name = { contains: name, mode: 'insensitive' }
+      where.name = { contains: name }
     }
 
     if (email) {
-      where.email = { contains: email, mode: 'insensitive' }
+      where.email = { contains: email }
+    }
+
+    // Filtros de data de criação
+    if (created_at_start || created_at_end) {
+      const createdAtFilter: Record<string, Date> = {}
+      if (created_at_start) {
+        createdAtFilter.gte = created_at_start
+      }
+      if (created_at_end) {
+        const endDate = new Date(created_at_end)
+        endDate.setHours(23, 59, 59, 999)
+        createdAtFilter.lte = endDate
+      }
+      where.createdAt = createdAtFilter
     }
 
     // Buscar customers

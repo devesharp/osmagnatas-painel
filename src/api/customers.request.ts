@@ -27,6 +27,10 @@ export const customersApi = {
     if (data.name) params.append('name', data.name);
     if (data.email) params.append('email', data.email);
 
+    // Adicionar filtros de data
+    if (data.created_at_start) params.append('created_at_start', data.created_at_start);
+    if (data.created_at_end) params.append('created_at_end', data.created_at_end);
+
     // Adicionar paginação
     if (searchData.query?.limit) params.append('limit', searchData.query.limit.toString());
     if (searchData.query?.offset) params.append('offset', searchData.query.offset.toString());

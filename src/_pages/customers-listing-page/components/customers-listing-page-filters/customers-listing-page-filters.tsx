@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { InputDate } from "@/components/ui/input-date";
 import { Select } from "@/components/ui/select";
 import { useCustomersListingPageFiltersCtrl } from "./customers-listing-page-filters.ctrl";
 import { CustomersListingPageFiltersProps } from "./customers-listing-page-filters.types";
@@ -62,6 +63,20 @@ export function CustomersListingPageFilters(props: CustomersListingPageFiltersPr
               name="email"
               title="Email"
               placeholder="Filtrar por email..."
+            />
+
+            {/* Data de criação - De */}
+            <InputDate
+              name="created_at_start"
+              title="Criação - De"
+              placeholder="dd/MM/yyyy"
+            />
+
+            {/* Data de criação - Até */}
+            <InputDate
+              name="created_at_end"
+              title="Criação - Até"
+              placeholder="dd/MM/yyyy"
             />
 
             {/* Botões de ação */}
