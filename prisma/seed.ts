@@ -151,6 +151,7 @@ async function main() {
       notes: 'Pagamento mensal do serviço de hospedagem',
       amount: 299.99,
       moeda: 'USD',
+      grams: 150,
       expired_at: new Date('2024-12-31'),
       payed_at: new Date('2024-12-15'),
       created_by: admin.id,
@@ -165,6 +166,7 @@ async function main() {
       notes: 'Desenvolvimento de sistema web personalizado',
       amount: 2500.00,
       moeda: 'USD',
+      grams: 0,
       expired_at: new Date('2024-12-25'),
       created_by: user1.id,
     },
@@ -178,6 +180,7 @@ async function main() {
       notes: 'Projeto de design de identidade visual',
       amount: 850.50,
       moeda: 'USD',
+      grams: 0,
       expired_at: new Date('2024-11-30'),
       created_by: user2.id,
     },
@@ -191,6 +194,7 @@ async function main() {
       notes: 'Consultoria em infraestrutura de TI',
       amount: 1250.00,
       moeda: 'USD',
+      grams: 300,
       expired_at: new Date('2024-12-20'),
       payed_at: new Date('2024-12-18'),
       created_by: admin.id,
@@ -205,6 +209,7 @@ async function main() {
       notes: 'Manutenção preventiva do servidor',
       amount: 150.00,
       moeda: 'USD',
+      grams: 0,
       expired_at: new Date('2025-01-15'),
       created_by: user1.id,
     },
@@ -218,6 +223,7 @@ async function main() {
       notes: 'Suporte técnico mensal',
       amount: 200.00,
       moeda: 'USD',
+      grams: 75,
       expired_at: new Date('2024-12-31'),
       payed_at: new Date('2024-12-01'),
       created_by: user2.id,
@@ -232,6 +238,7 @@ async function main() {
       notes: 'Criação de landing page',
       amount: 450.00,
       moeda: 'USD',
+      grams: 0,
       expired_at: new Date('2025-01-10'),
       created_by: admin.id,
     },
@@ -245,6 +252,7 @@ async function main() {
       notes: 'Implementação de sistema de backup',
       amount: 750.00,
       moeda: 'USD',
+      grams: 0,
       expired_at: new Date('2025-02-01'),
       created_by: user1.id,
     },
@@ -256,6 +264,7 @@ async function main() {
       customer_id: customer1.id,
       amount: 450.00,
       payed: false,
+      grams: 200,
       created_by: admin.id,
     },
   })
@@ -265,6 +274,7 @@ async function main() {
       customer_id: customer2.id,
       amount: 1200.50,
       payed: false,
+      grams: 500,
       created_by: user1.id,
     },
   })
@@ -274,6 +284,7 @@ async function main() {
       customer_id: customer3.id,
       amount: 75.25,
       payed: true,
+      grams: 50,
       created_by: user2.id,
     },
   })
@@ -283,6 +294,7 @@ async function main() {
       customer_id: customer4.id,
       amount: 890.00,
       payed: false,
+      grams: 350,
       created_by: admin.id,
     },
   })
@@ -292,6 +304,7 @@ async function main() {
       customer_id: customer1.id,
       amount: 230.00,
       payed: true,
+      grams: 120,
       created_by: user1.id,
     },
   })
@@ -301,6 +314,7 @@ async function main() {
       customer_id: customer2.id,
       amount: 567.80,
       payed: false,
+      grams: 250,
       created_by: user2.id,
     },
   })
@@ -310,6 +324,7 @@ async function main() {
       customer_id: customer3.id,
       amount: 180.00,
       payed: false,
+      grams: 90,
       created_by: admin.id,
     },
   })
@@ -319,30 +334,31 @@ async function main() {
       customer_id: customer4.id,
       amount: 350.00,
       payed: true,
+      grams: 180,
       created_by: user1.id,
     },
   })
 
   console.log('✅ Transactions criadas:', {
-    transaction1: { id: transaction1.id, customer: customer1.name, status: transaction1.status, amount: transaction1.amount, moeda: transaction1.moeda },
-    transaction2: { id: transaction2.id, customer: customer2.name, status: transaction2.status, amount: transaction2.amount, moeda: transaction2.moeda },
-    transaction3: { id: transaction3.id, customer: customer3.name, status: transaction3.status, amount: transaction3.amount, moeda: transaction3.moeda },
-    transaction4: { id: transaction4.id, customer: customer4.name, status: transaction4.status, amount: transaction4.amount, moeda: transaction4.moeda },
-    transaction5: { id: transaction5.id, customer: customer1.name, status: transaction5.status, amount: transaction5.amount, moeda: transaction5.moeda },
-    transaction6: { id: transaction6.id, customer: customer2.name, status: transaction6.status, amount: transaction6.amount, moeda: transaction6.moeda },
-    transaction7: { id: transaction7.id, customer: customer3.name, status: transaction7.status, amount: transaction7.amount, moeda: transaction7.moeda },
-    transaction8: { id: transaction8.id, customer: customer4.name, status: transaction8.status, amount: transaction8.amount, moeda: transaction8.moeda }
+    transaction1: { id: transaction1.id, customer: customer1.name, status: transaction1.status, amount: transaction1.amount, moeda: transaction1.moeda, grams: transaction1.grams },
+    transaction2: { id: transaction2.id, customer: customer2.name, status: transaction2.status, amount: transaction2.amount, moeda: transaction2.moeda, grams: transaction2.grams },
+    transaction3: { id: transaction3.id, customer: customer3.name, status: transaction3.status, amount: transaction3.amount, moeda: transaction3.moeda, grams: transaction3.grams },
+    transaction4: { id: transaction4.id, customer: customer4.name, status: transaction4.status, amount: transaction4.amount, moeda: transaction4.moeda, grams: transaction4.grams },
+    transaction5: { id: transaction5.id, customer: customer1.name, status: transaction5.status, amount: transaction5.amount, moeda: transaction5.moeda, grams: transaction5.grams },
+    transaction6: { id: transaction6.id, customer: customer2.name, status: transaction6.status, amount: transaction6.amount, moeda: transaction6.moeda, grams: transaction6.grams },
+    transaction7: { id: transaction7.id, customer: customer3.name, status: transaction7.status, amount: transaction7.amount, moeda: transaction7.moeda, grams: transaction7.grams },
+    transaction8: { id: transaction8.id, customer: customer4.name, status: transaction8.status, amount: transaction8.amount, moeda: transaction8.moeda, grams: transaction8.grams }
   })
 
   console.log('✅ Inadimplências criadas:', {
-    inadimplencia1: { id: inadimplencia1.id, customer: customer1.name, amount: inadimplencia1.amount, payed: inadimplencia1.payed },
-    inadimplencia2: { id: inadimplencia2.id, customer: customer2.name, amount: inadimplencia2.amount, payed: inadimplencia2.payed },
-    inadimplencia3: { id: inadimplencia3.id, customer: customer3.name, amount: inadimplencia3.amount, payed: inadimplencia3.payed },
-    inadimplencia4: { id: inadimplencia4.id, customer: customer4.name, amount: inadimplencia4.amount, payed: inadimplencia4.payed },
-    inadimplencia5: { id: inadimplencia5.id, customer: customer1.name, amount: inadimplencia5.amount, payed: inadimplencia5.payed },
-    inadimplencia6: { id: inadimplencia6.id, customer: customer2.name, amount: inadimplencia6.amount, payed: inadimplencia6.payed },
-    inadimplencia7: { id: inadimplencia7.id, customer: customer3.name, amount: inadimplencia7.amount, payed: inadimplencia7.payed },
-    inadimplencia8: { id: inadimplencia8.id, customer: customer4.name, amount: inadimplencia8.amount, payed: inadimplencia8.payed }
+    inadimplencia1: { id: inadimplencia1.id, customer: customer1.name, amount: inadimplencia1.amount, payed: inadimplencia1.payed, grams: inadimplencia1.grams },
+    inadimplencia2: { id: inadimplencia2.id, customer: customer2.name, amount: inadimplencia2.amount, payed: inadimplencia2.payed, grams: inadimplencia2.grams },
+    inadimplencia3: { id: inadimplencia3.id, customer: customer3.name, amount: inadimplencia3.amount, payed: inadimplencia3.payed, grams: inadimplencia3.grams },
+    inadimplencia4: { id: inadimplencia4.id, customer: customer4.name, amount: inadimplencia4.amount, payed: inadimplencia4.payed, grams: inadimplencia4.grams },
+    inadimplencia5: { id: inadimplencia5.id, customer: customer1.name, amount: inadimplencia5.amount, payed: inadimplencia5.payed, grams: inadimplencia5.grams },
+    inadimplencia6: { id: inadimplencia6.id, customer: customer2.name, amount: inadimplencia6.amount, payed: inadimplencia6.payed, grams: inadimplencia6.grams },
+    inadimplencia7: { id: inadimplencia7.id, customer: customer3.name, amount: inadimplencia7.amount, payed: inadimplencia7.payed, grams: inadimplencia7.grams },
+    inadimplencia8: { id: inadimplencia8.id, customer: customer4.name, amount: inadimplencia8.amount, payed: inadimplencia8.payed, grams: inadimplencia8.grams }
   })
 
   // Criar logs de exemplo - mais abrangente
@@ -573,11 +589,13 @@ async function main() {
   console.log('💰 Transactions de teste criadas:')
   console.log('   8 transações criadas com diferentes status (PENDING, PAYED, CANCELED)')
   console.log('   Valores variando de $150.00 a $2500.00')
+  console.log('   Valores de grams variando de 0g a 300g')
   console.log('   Serviços: hospedagem, desenvolvimento web, design, consultoria TI, etc.')
   console.log('')
   console.log('⚠️ Inadimplências de teste criadas:')
   console.log('   8 inadimplências criadas com status mistos (pagas e não pagas)')
   console.log('   Valores variando de $75.25 a $1200.50')
+  console.log('   Valores de grams variando de 50g a 500g')
   console.log('   Distribuídas entre todos os customers para demonstração')
 }
 
