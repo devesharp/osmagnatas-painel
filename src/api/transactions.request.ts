@@ -23,12 +23,18 @@ export const transactionsApi = {
 
     // Adicionar filtros de busca
     if (data.search) params.append('search', data.search);
-    if (data.status) params.append('status', data.status);
-    if (data.payment_type) params.append('payment_type', data.payment_type);
+    if (data.status && data.status != 'all') params.append('status', data.status);
+    if (data.payment_type && data.payment_type != 'all') params.append('payment_type', data.payment_type);
     if (data.customer_id) params.append('customer_id', data.customer_id.toString());
     if (data.moeda) params.append('moeda', data.moeda);
     if (data.amount_min) params.append('amount_min', data.amount_min.toString());
     if (data.amount_max) params.append('amount_max', data.amount_max.toString());
+    if (data.expired_at_start) params.append('expired_at_start', data.expired_at_start);
+    if (data.expired_at_end) params.append('expired_at_end', data.expired_at_end);
+    if (data.payed_at_start) params.append('payed_at_start', data.payed_at_start);
+    if (data.payed_at_end) params.append('payed_at_end', data.payed_at_end);
+    if (data.created_at_start) params.append('created_at_start', data.created_at_start);
+    if (data.created_at_end) params.append('created_at_end', data.created_at_end);
 
     // Adicionar paginação
     if (searchData.query?.limit) params.append('limit', searchData.query.limit.toString());

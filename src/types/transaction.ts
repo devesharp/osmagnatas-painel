@@ -69,6 +69,12 @@ export interface TransactionsSearchFilters {
   moeda?: string
   amount_min?: number
   amount_max?: number
+  expired_at_start?: string
+  expired_at_end?: string
+  payed_at_start?: string
+  payed_at_end?: string
+  created_at_start?: string
+  created_at_end?: string
   limit?: number
   offset?: number
 }

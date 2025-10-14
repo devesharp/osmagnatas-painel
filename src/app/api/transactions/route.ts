@@ -116,17 +116,35 @@ export async function GET(request: NextRequest) {
     const moeda = searchParams.get('moeda') || undefined
     const amount_min = searchParams.get('amount_min') ? parseFloat(searchParams.get('amount_min')!) : undefined
     const amount_max = searchParams.get('amount_max') ? parseFloat(searchParams.get('amount_max')!) : undefined
+    
+    // Parâmetros de data - Função auxiliar para converter dd/MM/yyyy para Date
+    const parseDate = (dateString: string | null): Date | undefined => {
+      if (!dateString) return undefined
+      // Aceita tanto formato dd/MM/yyyy quanto yyyy-MM-dd
+      if (dateString.includes('/')) {
+        const [day, month, year] = dateString.split('/')
+        return new Date(`${year}-${month}-${day}`)
+      }
+      return new Date(dateString)
+    }
+
+    const expired_at_start = parseDate(searchParams.get('expired_at_start'))
+    const expired_at_end = parseDate(searchParams.get('expired_at_end'))
+    const payed_at_start = parseDate(searchParams.get('payed_at_start'))
+    const payed_at_end = parseDate(searchParams.get('payed_at_end'))
+    const created_at_start = parseDate(searchParams.get('created_at_start'))
+    const created_at_end = parseDate(searchParams.get('created_at_end'))
 
     // Construir filtros
     const where: Record<string, unknown> = {}
 
     if (search) {
       where.OR = [
-        { notes: { contains: search, mode: 'insensitive' } },
+        { notes: { contains: search } },
         { customer: {
           OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } }
+            { name: { contains: search } },
+            { email: { contains: search } }
           ]
         }}
       ]
@@ -157,6 +175,48 @@ export async function GET(request: NextRequest) {
         amountFilter.lte = amount_max
       }
       where.amount = amountFilter
+    }
+
+    // Filtros de data de vencimento
+    if (expired_at_start || expired_at_end) {
+      const expiredAtFilter: Record<string, Date> = {}
+      if (expired_at_start) {
+        expiredAtFilter.gte = expired_at_start
+      }
+      if (expired_at_end) {
+        const endDate = new Date(expired_at_end)
+        endDate.setHours(23, 59, 59, 999)
+        expiredAtFilter.lte = endDate
+      }
+      where.expired_at = expiredAtFilter
+    }
+
+    // Filtros de data de pagamento
+    if (payed_at_start || payed_at_end) {
+      const payedAtFilter: Record<string, Date> = {}
+      if (payed_at_start) {
+        payedAtFilter.gte = payed_at_start
+      }
+      if (payed_at_end) {
+        const endDate = new Date(payed_at_end)
+        endDate.setHours(23, 59, 59, 999)
+        payedAtFilter.lte = endDate
+      }
+      where.payed_at = payedAtFilter
+    }
+
+    // Filtros de data de criação
+    if (created_at_start || created_at_end) {
+      const createdAtFilter: Record<string, Date> = {}
+      if (created_at_start) {
+        createdAtFilter.gte = created_at_start
+      }
+      if (created_at_end) {
+        const endDate = new Date(created_at_end)
+        endDate.setHours(23, 59, 59, 999)
+        createdAtFilter.lte = endDate
+      }
+      where.createdAt = createdAtFilter
     }
 
     // Buscar transactions

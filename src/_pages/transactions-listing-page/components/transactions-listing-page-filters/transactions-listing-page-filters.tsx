@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { InputDate } from "@/components/ui/input-date";
 import { Select } from "@/components/ui/select";
 import { useTransactionsListingPageFiltersCtrl } from "./transactions-listing-page-filters.ctrl";
 import { TransactionsListingPageFiltersProps } from "./transactions-listing-page-filters.types";
@@ -62,7 +63,44 @@ export function TransactionsListingPageFilters(props: TransactionsListingPageFil
               ]}
             />
 
-            {/* TODO: Adicionar mais campos de filtro conforme necessário */}
+            {/* Filtros de Data de Vencimento */}
+            <InputDate
+              name="expired_at_start"
+              title="Vencimento - De"
+              placeholder="dd/MM/yyyy"
+            />
+
+            <InputDate
+              name="expired_at_end"
+              title="Vencimento - Até"
+              placeholder="dd/MM/yyyy"
+            />
+
+            {/* Filtros de Data de Pagamento */}
+            <InputDate
+              name="payed_at_start"
+              title="Pagamento - De"
+              placeholder="dd/MM/yyyy"
+            />
+
+            <InputDate
+              name="payed_at_end"
+              title="Pagamento - Até"
+              placeholder="dd/MM/yyyy"
+            />
+
+            {/* Filtros de Data de Criação */}
+            <InputDate
+              name="created_at_start"
+              title="Criação - De"
+              placeholder="dd/MM/yyyy"
+            />
+
+            <InputDate
+              name="created_at_end"
+              title="Criação - Até"
+              placeholder="dd/MM/yyyy"
+            />
 
             {/* Botões de ação */}
             <div className="gap-2 pt-0 col-span-full hidden md:flex">

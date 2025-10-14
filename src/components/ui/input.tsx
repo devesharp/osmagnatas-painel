@@ -20,11 +20,13 @@ function Input({
   mask?: MaskType;
   suffix?: React.ReactNode | string;
   prefix?: React.ReactNode | string;
+  error?: string;
+  onInputTextChange?: (value: string) => void;
 }) {
 
   const { value, setValue, error } = useFormField(props.name ?? "", "");
   const isFormContext = !!setValue && !!props.name;
-  const errorMessage = error;
+  const errorMessage = props.error ?? error;
 
   // Estado interno para controlar o valor com máscara - sempre inicializado
   const [displayValue, setDisplayValue] = React.useState("");
@@ -47,12 +49,15 @@ function Input({
       const maskedValue = applyMask(inputValue, mask);
       setDisplayValue(maskedValue);
 
+      props.onInputTextChange?.(maskedValue);
+
       // Se estiver usando form context, salva o valor sem máscara
       if (isFormContext) {
         const cleanValue = removeMask(maskedValue, mask);
         setValue(cleanValue);
       }
     } else {
+      props.onInputTextChange?.(inputValue);
       // Sem máscara, comportamento normal
       setDisplayValue(inputValue);
       if (isFormContext) {
@@ -70,12 +75,12 @@ function Input({
       )}
       <div
         className={cn(
-          "file:text-foreground border-input-dark placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input flex h-10 w-full min-w-0 border bg-white rounded-[5px] text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm items-center justify-center",
-          props.disabled && "pointer-events-none cursor-not-allowed opacity-50",
-          "focus-within:border-primary",
-          "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-          !!errorMessage && "border-red-500",
-          className
+            "file:text-foreground border-input-dark placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input flex h-10 w-full min-w-0 border bg-white rounded-[5px] text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm items-center justify-center",
+            props.disabled && "pointer-events-none cursor-not-allowed opacity-50",
+            "focus-within:border-primary",
+            "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+            !!errorMessage && "border-red-500",
+            className
         )}
       >
         {prefix && (
