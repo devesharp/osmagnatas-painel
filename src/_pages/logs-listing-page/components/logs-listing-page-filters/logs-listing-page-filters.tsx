@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { InputDate } from "@/components/ui/input-date";
 import { Select } from "@/components/ui/select";
 import { useLogsListingPageFiltersCtrl } from "./logs-listing-page-filters.ctrl";
 import { LogsListingPageFiltersProps } from "./logs-listing-page-filters.types";
@@ -66,19 +66,17 @@ export function LogsListingPageFilters(props: LogsListingPageFiltersProps) {
             />
 
             {/* Campo de data inicial */}
-            <Input
+            <InputDate
               name="date_from"
               title="Data Inicial"
-              placeholder="DD/MM/AAAA"
-              mask="date"
+              placeholder="dd/MM/yyyy"
             />
 
             {/* Campo de data final */}
-            <Input
+            <InputDate
               name="date_to"
               title="Data Final"
-              placeholder="DD/MM/AAAA"
-              mask="date"
+              placeholder="dd/MM/yyyy"
             />
 
             {/* Botões de ação */}

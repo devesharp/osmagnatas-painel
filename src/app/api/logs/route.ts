@@ -70,34 +70,47 @@ export async function GET(request: NextRequest) {
 
     const authenticatedUser = authResult
 
+    // Função auxiliar para converter string de data dd/MM/yyyy ou yyyy-MM-dd para Date
+    const parseDate = (dateString: string | null): Date | undefined => {
+      if (!dateString) return undefined
+      // Aceita tanto formato dd/MM/yyyy quanto yyyy-MM-dd
+      if (dateString.includes('/')) {
+        const [day, month, year] = dateString.split('/')
+        return new Date(`${year}-${month}-${day}`)
+      }
+      return new Date(dateString)
+    }
+
     // Extrair parâmetros de busca
     const searchParams = request.nextUrl.searchParams
 
     const user_id = searchParams.get('user_id')
     const log_type = searchParams.get('log_type') as any
-    const date_from = searchParams.get('date_from')
-    const date_to = searchParams.get('date_to')
+    const date_from_parsed = parseDate(searchParams.get('date_from'))
+    const date_to_parsed = parseDate(searchParams.get('date_to'))
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
     // Construir filtros
     const where: any = {}
 
-    if (user_id) {
+    if (user_id && user_id !== '-') {
       where.user_id = parseInt(user_id)
     }
 
-    if (log_type) {
+    if (log_type && log_type !== '-') {
       where.log_type = log_type
     }
 
-    if (date_from || date_to) {
+    if (date_from_parsed || date_to_parsed) {
       where.date = {}
-      if (date_from) {
-        where.date.gte = new Date(date_from)
+      if (date_from_parsed) {
+        where.date.gte = date_from_parsed
       }
-      if (date_to) {
-        where.date.lte = new Date(date_to)
+      if (date_to_parsed) {
+        const endDate = new Date(date_to_parsed)
+        endDate.setHours(23, 59, 59, 999)
+        where.date.lte = endDate
       }
     }
 
