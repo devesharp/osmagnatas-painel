@@ -12,6 +12,7 @@ export interface IInadimplenciaFormPageForm {
   customer_id: number;
   amount: number;
   payed: boolean;
+  grams?: number;
   notes?: string;
 }
 

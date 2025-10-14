@@ -115,6 +115,7 @@ model Transaction {
   notes             String?
   amount            Float
   moeda             String             @default("USD")
+  grams             Int?
   expired_at        DateTime?
   payed_at          DateTime?
   created_by        Int
@@ -135,6 +136,7 @@ model Inadimplencia {
   amount       Float
   amount_payed Float    @default(0)
   payed        Boolean  @default(false)
+  grams        Int?
   created_by   Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

@@ -137,6 +137,17 @@ export function useInadimplenciaListingPageColumns({
         render: (item) => <AmountCol item={item} />,
       },
       {
+        key: "grams",
+        title: "Gramas",
+        width: "100px",
+        sortable: true,
+        render: (item) => (
+          <span className="font-semibold">
+            {item.grams ? `${item.grams}g` : '-'}
+          </span>
+        ),
+      },
+      {
         key: "createdAt",
         title: "Data",
         width: "150px",

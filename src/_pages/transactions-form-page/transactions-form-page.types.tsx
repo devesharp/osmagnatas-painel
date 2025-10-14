@@ -15,6 +15,7 @@ export interface ITransactionsFormPageForm {
   notes?: string;
   amount: number;
   moeda: string;
+  grams?: number;
   expired_at?: Date;
   payed_at?: Date;
 }

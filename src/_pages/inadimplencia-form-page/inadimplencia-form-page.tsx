@@ -64,6 +64,14 @@ export function InadimplenciaFormPage() {
                     step="0.01"
                     placeholder="0,00"
                   />
+
+                  <Input
+                    name="grams"
+                    title="Gramas"
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                  />
                 </div>
               </div>
 

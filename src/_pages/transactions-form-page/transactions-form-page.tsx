@@ -118,6 +118,14 @@ export function TransactionsFormPage() {
                       // { value: "EUR", label: "Euro (EUR)" },
                     ]}
                   />
+
+                  <Input
+                    name="grams"
+                    title="Gramas"
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                  />
                 </div>
               </div>
 

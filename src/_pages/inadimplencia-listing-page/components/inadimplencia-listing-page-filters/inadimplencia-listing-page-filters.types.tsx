@@ -24,6 +24,12 @@ export const filterSchema = z.object({
   /** Valor máximo */
   amount_max: z.string().optional().transform((val) => val ? parseFloat(val) : undefined),
 
+  /** Gramas mínimo */
+  grams_min: z.string().optional().transform((val) => val ? parseInt(val) : undefined),
+
+  /** Gramas máximo */
+  grams_max: z.string().optional().transform((val) => val ? parseInt(val) : undefined),
+
   /** Limite de resultados */
   limit: z.string().optional().transform((val) => val ? parseInt(val) : undefined),
 

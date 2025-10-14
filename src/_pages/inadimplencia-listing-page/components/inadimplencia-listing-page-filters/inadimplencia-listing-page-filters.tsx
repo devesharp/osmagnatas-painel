@@ -64,6 +64,24 @@ export function InadimplenciaListingPageFilters(props: InadimplenciaListingPageF
               step="0.01"
             />
 
+            {/* Campo de gramas mínimo */}
+            <Input
+              name="grams_min"
+              title="Gramas Mínimo"
+              placeholder="0"
+              type="number"
+              min="0"
+            />
+
+            {/* Campo de gramas máximo */}
+            <Input
+              name="grams_max"
+              title="Gramas Máximo"
+              placeholder="999999"
+              type="number"
+              min="0"
+            />
+
             {/* Botões de ação */}
             <div className="gap-2 pt-0 col-span-full hidden md:flex">
               <Button

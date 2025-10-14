@@ -10,6 +10,7 @@ export interface Transaction {
   notes?: string | null
   amount: number
   moeda: string
+  grams?: number | null
   expired_at?: Date | null
   payed_at?: Date | null
   created_by: number
@@ -40,6 +41,7 @@ export interface CreateTransactionRequest {
   notes?: string
   amount: number
   moeda?: string
+  grams?: number
   expired_at?: Date
   payed_at?: Date
   created_by: number
@@ -53,6 +55,7 @@ export interface UpdateTransactionRequest {
   notes?: string
   amount?: number
   moeda?: string
+  grams?: number
   expired_at?: Date | null
   payed_at?: Date | null
 }

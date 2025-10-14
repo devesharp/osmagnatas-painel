@@ -4,6 +4,7 @@ export interface Inadimplencia {
   amount: number
   amount_payed: number
   payed: boolean
+  grams?: number | null
   created_by: number
   createdAt: Date
   updatedAt: Date
@@ -23,6 +24,7 @@ export interface CreateInadimplenciaRequest {
   customer_id: number
   amount: number
   payed?: boolean
+  grams?: number
   created_by: number
 }
 
@@ -31,6 +33,7 @@ export interface UpdateInadimplenciaRequest {
   amount?: number
   amount_payed?: number
   payed?: boolean
+  grams?: number
 }
 
 export interface InadimplenciaSearchFilters {
@@ -40,6 +43,8 @@ export interface InadimplenciaSearchFilters {
   customer_id?: number
   amount_min?: number
   amount_max?: number
+  grams_min?: number
+  grams_max?: number
   limit?: number
   offset?: number
 }

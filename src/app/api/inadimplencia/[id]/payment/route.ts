@@ -189,6 +189,7 @@ export async function POST(
           payment_type: 'IN', // É uma entrada, pois o cliente está pagando
           notes: body.notes || `Pagamento de inadimplência #${inadimplenciaId}`,
           amount: body.amount,
+          grams: inadimplencia.grams || 0,
           moeda: body.moeda || 'USD',
           payed_at: new Date(),
           created_by: authenticatedUser.id,

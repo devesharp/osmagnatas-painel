@@ -51,6 +51,7 @@ export function TransactionsFormPageCtrl() {
         }),
         amount: z.number().min(0.01, "Valor deve ser maior que zero"),
         moeda: z.string().min(1, "Moeda é obrigatória"),
+        grams: z.number().int().min(0, "Gramas deve ser um número inteiro positivo").optional(),
         notes: z.string().optional(),
         expired_at: z.string().optional(),
         payed_at: z.string().optional(),

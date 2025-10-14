@@ -171,6 +171,17 @@ export function useTransactionsListingPageColumns({
         render: (item) => <AmountCol amount={item.amount} moeda={item.moeda} />,
       },
       {
+        key: "grams",
+        title: "Gramas",
+        width: "100px",
+        sortable: true,
+        render: (item) => (
+          <span className="font-semibold">
+            {item.grams ? `${item.grams}g` : '-'}
+          </span>
+        ),
+      },
+      {
         key: "expired_at",
         title: "Vencimento",
         width: "120px",
